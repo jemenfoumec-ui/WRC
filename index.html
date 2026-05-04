@@ -5,7 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#050508">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="description" content="WRC 2026 - World Rap Championship - Le plus grand tournoi de rap au monde">
     <title>WRC 2026 - World Rap Championship</title>
+    
+    <!-- Content Security Policy -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://*.supabase.co;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+        font-src 'self' https://fonts.gstatic.com;
+        img-src 'self' data: https: blob:;
+        media-src 'self' https://player.vimeo.com https://*.supabase.co blob:;
+        connect-src 'self' https://*.supabase.co https://ycgasfujxycqmbmiedaw.supabase.co;
+        frame-src https://player.vimeo.com;
+    ">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,10 +26,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Teko:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Core Design System -->
-    <link rel="stylesheet" href="wrc-core.css">
-    <link rel="stylesheet" href="wrc-layout.css">
-    <link rel="stylesheet" href="wrc-components.css">
-    <link rel="stylesheet" href="global-player.css">
+    <link rel="stylesheet" href="/wrc-core.css">
+    <link rel="stylesheet" href="/wrc-layout.css">
+    <link rel="stylesheet" href="/wrc-components.css">
+    <link rel="stylesheet" href="/global-player.css">
+    
+    <!-- Auth Modal Styles -->
+    <link rel="stylesheet" href="/src/css/auth.css">
 </head>
 <body>
 
@@ -30,8 +46,6 @@
 
 <!-- App Container -->
 <div class="wrc-app">
-    
-    <!-- Sidebar (injected by wrc-nav.js) -->
     
     <!-- Main Content -->
     <div class="wrc-main">
@@ -48,10 +62,10 @@
                     64 Nations. Un seul vainqueur. Le plus grand tournoi de rap de l'histoire commence ici.
                 </p>
                 <div class="wrc-hero-actions">
-                    <button class="btn btn-primary btn-lg" onclick="window.openAuth && window.openAuth('artist')">
+                    <button class="btn btn-primary btn-lg" id="btnJoinArtist">
                         REPRÉSENTER LA FRANCE
                     </button>
-                    <button class="btn btn-outline btn-lg" onclick="window.openAuth && window.openAuth('fan')">
+                    <button class="btn btn-outline btn-lg" id="btnJoinFan">
                         ÊTRE JURY
                     </button>
                 </div>
@@ -180,7 +194,7 @@
                     </div>
                     <div class="leaderboard-list" id="leaderboardLive">
                         <div style="padding: var(--space-8); text-align: center; color: var(--text-muted);">
-                            Aucun participant pour le moment
+                            Chargement...
                         </div>
                     </div>
                 </div>
@@ -191,7 +205,7 @@
                 <h3 style="font-family: var(--font-display); font-size: var(--text-3xl); color: var(--text-primary); margin-bottom: var(--space-6);">
                     PRÊT À ENTRER DANS L'ARÈNE ?
                 </h3>
-                <button class="btn btn-primary btn-xl" onclick="window.openAuth && window.openAuth('artist')">
+                <button class="btn btn-primary btn-xl" id="btnCreateProfile">
                     CRÉER MON PROFIL
                 </button>
             </section>
@@ -207,38 +221,28 @@
 </div>
 
 <!-- Scripts -->
-<script>
-// Countdown
-(function() {
-    const target = new Date('2026-06-01T00:00:00').getTime();
-    
-    function update() {
-        const now = Date.now();
-        const diff = target - now;
-        
-        if (diff <= 0) return;
-        
-        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const s = Math.floor((diff % (1000 * 60)) / 1000);
-        
-        document.getElementById('days').textContent = String(d).padStart(2, '0');
-        document.getElementById('hours').textContent = String(h).padStart(2, '0');
-        document.getElementById('minutes').textContent = String(m).padStart(2, '0');
-        document.getElementById('seconds').textContent = String(s).padStart(2, '0');
-    }
-    
-    update();
-    setInterval(update, 1000);
-})();
-</script>
+<script type="module" src="/src/main.js"></script>
 
-<script src="wrc-nav.js"></script>
-<script src="wrc-auth.js"></script>
-<script src="toast.js"></script>
-<script type="module" src="supabaseClient.js"></script>
-<script type="module" src="script.js"></script>
+<script>
+    // Event listeners for auth buttons (fallback for non-module browsers)
+    document.addEventListener('DOMContentLoaded', () => {
+        const btnJoinArtist = document.getElementById('btnJoinArtist');
+        const btnJoinFan = document.getElementById('btnJoinFan');
+        const btnCreateProfile = document.getElementById('btnCreateProfile');
+        
+        function openAuth(role) {
+            if (window.openAuth) {
+                window.openAuth(role);
+            }
+        }
+        
+        [btnJoinArtist, btnJoinFan, btnCreateProfile].forEach(btn => {
+            if (btn) {
+                btn.addEventListener('click', () => openAuth(btn === btnJoinFan ? 'fan' : 'artist'));
+            }
+        });
+    });
+</script>
 
 <!-- Global Player -->
 <div id="globalPlayer" class="wrc-player visible" style="left: 0;">
@@ -269,7 +273,7 @@
         </div>
     </div>
 </div>
-<script type="module" src="globalPlayer.js"></script>
+<script type="module" src="/globalPlayer.js"></script>
 
 </body>
 </html>
