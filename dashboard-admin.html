@@ -4,15 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#050508">
+    <meta name="description" content="WRC 2026 Admin Panel - War Room">
     <title>Admin Panel | WRC 2026</title>
     
+    <!-- Content Security Policy -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://*.supabase.co;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+        font-src 'self' https://fonts.gstatic.com;
+        img-src 'self' data: https: blob:;
+        media-src 'self' https://player.vimeo.com https://*.supabase.co blob:;
+        connect-src 'self' https://*.supabase.co https://ycgasfujxycqmbmiedaw.supabase.co;
+        frame-src https://player.vimeo.com;
+    ">
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Teko:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="wrc-core.css">
-    <link rel="stylesheet" href="wrc-layout.css">
-    <link rel="stylesheet" href="wrc-components.css">
+    <!-- Styles -->
+    <link rel="stylesheet" href="/wrc-core.css">
+    <link rel="stylesheet" href="/wrc-layout.css">
+    <link rel="stylesheet" href="/wrc-components.css">
+    <link rel="stylesheet" href="/src/css/auth.css">
     
     <style>
         /* Admin accent color */
@@ -66,6 +82,10 @@
         .status-dot.active { background: var(--success); }
         .status-dot.pending { background: var(--warning); }
         .status-dot.inactive { background: var(--text-muted); }
+        
+        .glass-card.elevated {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -138,7 +158,7 @@
                         <h3 class="glass-card-title">👥 Utilisateurs récents</h3>
                         <p class="glass-card-subtitle">Dernières inscriptions</p>
                     </div>
-                    <button class="btn btn-sm btn-ghost">Voir tout →</button>
+                    <button class="btn btn-sm btn-ghost" id="btnViewAllUsers">Voir tout →</button>
                 </div>
                 
                 <div style="overflow-x: auto;">
@@ -227,15 +247,41 @@
     </section>
 
 </main>
-
-<script type="module" src="supabaseClient.js"></script>
-<script type="module" src="dashboard-admin.js"></script>
+</div>
 
 </div>
 
-<script src="wrc-nav.js"></script>
-<script src="wrc-auth.js"></script>
-<script src="toast.js"></script>
+<!-- Scripts - Module based -->
+<script type="module">
+    // Core modules
+    import './src/js/auth/toast.js';
+    import './src/js/auth/auth.js';
+    import './src/js/components/nav.js';
+    import { adminUI } from './src/js/admin/AdminUI.js';
+    import { adminApi } from './src/js/admin/AdminApi.js';
+    import { logger } from './src/js/core/config.js';
+
+    // Initialize admin UI
+    adminUI.init();
+
+    // Load initial data
+    async function initAdmin() {
+        logger.info('Admin panel initializing...');
+        
+        await Promise.all([
+            adminUI.loadStats(),
+            adminUI.loadUsersTable()
+        ]);
+        
+        logger.info('Admin panel ready');
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAdmin);
+    } else {
+        initAdmin();
+    }
+</script>
 
 </body>
 </html>
