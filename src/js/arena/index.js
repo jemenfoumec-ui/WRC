@@ -319,7 +319,7 @@ function displayMatch() {
 // ==========================================
 // VOTING
 // ==========================================
-window.castVote = async function(choice) {
+async function castVote(choice) {
     if (arenaVoting.hasUserVoted()) {
         showToast('Vote', 'Vous avez déjà voted !', 'warning');
         return;
@@ -535,6 +535,14 @@ function setupEventListeners() {
                 window.openBracketTree();
             }
         });
+    }
+
+    // Vote buttons
+    if (elements.btnA) {
+        elements.btnA.addEventListener('click', () => castVote('A'));
+    }
+    if (elements.btnB) {
+        elements.btnB.addEventListener('click', () => castVote('B'));
     }
 }
 

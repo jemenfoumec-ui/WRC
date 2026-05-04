@@ -26,13 +26,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Teko:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Core Design System -->
-    <link rel="stylesheet" href="/wrc-core.css">
-    <link rel="stylesheet" href="/wrc-layout.css">
-    <link rel="stylesheet" href="/wrc-components.css">
-    <link rel="stylesheet" href="/global-player.css">
+    <link rel="stylesheet" href="/css/wrc-core.css">
+    <link rel="stylesheet" href="/css/wrc-layout.css">
+    <link rel="stylesheet" href="/css/wrc-components.css">
+    <link rel="stylesheet" href="/css/global-player.css">
     
     <!-- Auth Modal Styles -->
-    <link rel="stylesheet" href="/src/css/auth.css">
+    <link rel="stylesheet" href="/css/auth.css">
 </head>
 <body>
 
@@ -221,20 +221,15 @@
 </div>
 
 <!-- Scripts -->
-<script type="module" src="/src/main.js"></script>
+<script type="module" src="/main.js"></script>
 
-<script>
-    // Event listeners for auth buttons (fallback for non-module browsers)
+<script type="module">
+    import { openAuthModal as openAuth } from '/js/auth/auth.js';
+    
     document.addEventListener('DOMContentLoaded', () => {
         const btnJoinArtist = document.getElementById('btnJoinArtist');
         const btnJoinFan = document.getElementById('btnJoinFan');
         const btnCreateProfile = document.getElementById('btnCreateProfile');
-        
-        function openAuth(role) {
-            if (window.openAuth) {
-                window.openAuth(role);
-            }
-        }
         
         [btnJoinArtist, btnJoinFan, btnCreateProfile].forEach(btn => {
             if (btn) {
@@ -273,7 +268,7 @@
         </div>
     </div>
 </div>
-<script type="module" src="/globalPlayer.js"></script>
+<script type="module" src="/js/components/globalPlayer.js"></script>
 
 </body>
 </html>

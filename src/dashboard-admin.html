@@ -25,10 +25,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Teko:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Styles -->
-    <link rel="stylesheet" href="/wrc-core.css">
-    <link rel="stylesheet" href="/wrc-layout.css">
-    <link rel="stylesheet" href="/wrc-components.css">
-    <link rel="stylesheet" href="/src/css/auth.css">
+    <link rel="stylesheet" href="/css/wrc-core.css">
+    <link rel="stylesheet" href="/css/wrc-layout.css">
+    <link rel="stylesheet" href="/css/wrc-components.css">
+    <link rel="stylesheet" href="/css/auth.css">
     
     <style>
         /* Admin accent color */
@@ -254,12 +254,9 @@
 <!-- Scripts - Module based -->
 <script type="module">
     // Core modules
-    import './src/js/auth/toast.js';
-    import './src/js/auth/auth.js';
-    import './src/js/components/nav.js';
-    import { adminUI } from './src/js/admin/AdminUI.js';
-    import { adminApi } from './src/js/admin/AdminApi.js';
-    import { logger } from './src/js/core/config.js';
+    import '/main.js';
+    import { adminUI, adminStats } from '/js/admin/index.js';
+    import { logger } from '/js/core/config.js';
 
     // Initialize admin UI
     adminUI.init();
@@ -269,7 +266,7 @@
         logger.info('Admin panel initializing...');
         
         await Promise.all([
-            adminUI.loadStats(),
+            adminStats.refresh(),
             adminUI.loadUsersTable()
         ]);
         
