@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#050508">
+    <title>Protocole | WRC 2026</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Teko:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="wrc-core.css">
+    <link rel="stylesheet" href="wrc-layout.css">
+    <link rel="stylesheet" href="wrc-components.css">
+    
+    <style>
+        .protocol-section {
+            margin-bottom: var(--space-12);
+        }
+        
+        .protocol-section h2 {
+            font-family: var(--font-display);
+            font-size: var(--text-3xl);
+            color: var(--text-primary);
+            margin-bottom: var(--space-6);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+        
+        .protocol-content {
+            background: var(--glass-medium);
+            backdrop-filter: blur(var(--blur-lg));
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+        }
+        
+        .protocol-content p {
+            color: var(--text-secondary);
+            line-height: var(--leading-relaxed);
+            margin-bottom: var(--space-4);
+        }
+        
+        .protocol-content p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .protocol-content ul {
+            list-style: none;
+            padding: 0;
+            margin: var(--space-4) 0;
+        }
+        
+        .protocol-content li {
+            color: var(--text-secondary);
+            padding: var(--space-2) 0;
+            padding-left: var(--space-6);
+            position: relative;
+        }
+        
+        .protocol-content li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+        
+        .protocol-highlight {
+            background: var(--primary-subtle);
+            border-left: 3px solid var(--primary);
+            padding: var(--space-4) var(--space-5);
+            border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+            margin: var(--space-4) 0;
+        }
+        
+        .protocol-highlight p {
+            color: var(--text-primary);
+            margin: 0;
+        }
+        
+        .toc-nav {
+            position: sticky;
+            top: var(--space-6);
+        }
+        
+        .toc-item {
+            display: block;
+            padding: var(--space-3) var(--space-4);
+            color: var(--text-tertiary);
+            text-decoration: none;
+            border-radius: var(--radius-lg);
+            transition: all 200ms var(--ease-out);
+            font-size: var(--text-sm);
+        }
+        
+        .toc-item:hover {
+            color: var(--text-primary);
+            background: var(--glass-light);
+        }
+        
+        .toc-item.active {
+            color: var(--primary-400);
+            background: var(--primary-subtle);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Background -->
+<div class="bg-video">
+    <video autoplay loop muted playsinline>
+        <source src="https://player.vimeo.com/external/517090025.sd.mp4?s=1d57f7247752e503348821045231792102142273&profile_id=164" type="video/mp4">
+    </video>
+</div>
+<div class="bg-grid"></div>
+
+<!-- App Container -->
+<div class="wrc-app">
+
+<div class="wrc-main">
+        <main class="wrc-content wrc-page" id="main-content">
+    
+    <!-- Header -->
+    <section class="wrc-section" style="text-align: center; padding: var(--space-12) 0;">
+        <span class="badge badge-primary" style="margin-bottom: var(--space-4);">📜 DOCUMENT OFFICIEL</span>
+        <h1 style="font-family: var(--font-display); font-size: var(--text-6xl); margin-bottom: var(--space-4);">
+            PROTOCOLE <span class="text-gradient">WRC 2026</span>
+        </h1>
+        <p style="font-size: var(--text-xl); color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+            Règlement officiel du World Rap Championship
+        </p>
+    </section>
+
+    <!-- Content with TOC -->
+    <div class="wrc-grid" style="grid-template-columns: 1fr 250px; gap: var(--space-8); align-items: start;">
+        
+        <!-- Main Content -->
+        <div>
+            
+            <!-- Article 1 -->
+            <section class="protocol-section" id="article1">
+                <h2><span>📌</span> Article 1 - Objet</h2>
+                <div class="protocol-content">
+                    <p>
+                        Le présent protocole définit les règles de participation, de déroulement et d'arbitrage du World Rap Championship (WRC) 2026, premier tournoi mondial de rap opposant des artistes de 64 nations.
+                    </p>
+                    <div class="protocol-highlight">
+                        <p><strong>Mission :</strong> Révéler les talents du rap mondial et couronner le champion du monde dans une compétition équitable et transparente.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Article 2 -->
+            <section class="protocol-section" id="article2">
+                <h2><span>👤</span> Article 2 - Éligibilité</h2>
+                <div class="protocol-content">
+                    <p>Pour participer au WRC, les candidats doivent :</p>
+                    <ul>
+                        <li>Avoir au moins 16 ans (autorisation parentale requise pour les mineurs)</li>
+                        <li>Résider dans le pays qu'ils souhaitent représenter</li>
+                        <li>Disposer d'un compte vérifié sur la plateforme WRC</li>
+                        <li>Avoir uploadé au minimum 1 morceau original</li>
+                        <li>Accepter le présent règlement</li>
+                    </ul>
+                    <p>
+                        Sont exclus : les artistes sous contrat exclusif avec un label majeur, et toute personne ayant fait l'objet d'une sanction pour comportement inapproprié lors d'une édition précédente.
+                    </p>
+                </div>
+            </section>
+            
+            <!-- Article 3 -->
+            <section class="protocol-section" id="article3">
+                <h2><span>🏆</span> Article 3 - Phases du tournoi</h2>
+                <div class="protocol-content">
+                    <p>Le WRC se déroule en 4 phases distinctes :</p>
+                    <ul>
+                        <li><strong>Phase 1 - Qualifications :</strong> Les artistes s'inscrivent et accumulent des points via les votes du jury et l'engagement communautaire</li>
+                        <li><strong>Phase 2 - Top 32 :</strong> Les 32 meilleurs de chaque pays s'affrontent en battles éliminatoires</li>
+                        <li><strong>Phase 3 - Finale Nationale :</strong> Les 2 finalistes s'affrontent pour le titre de champion national</li>
+                        <li><strong>Phase 4 - Mondial :</strong> Les champions nationaux s'affrontent dans le bracket mondial</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <!-- Article 4 -->
+            <section class="protocol-section" id="article4">
+                <h2><span>⚖️</span> Article 4 - Système de vote</h2>
+                <div class="protocol-content">
+                    <p>Le classement est calculé selon la formule suivante :</p>
+                    <ul>
+                        <li><strong>50%</strong> - Votes du jury public</li>
+                        <li><strong>30%</strong> - Engagement (likes, partages, écoutes)</li>
+                        <li><strong>20%</strong> - Évaluation du jury expert</li>
+                    </ul>
+                    <div class="protocol-highlight">
+                        <p>⚠️ Tout comportement frauduleux (achat de votes, bots, multi-comptes) entraîne la disqualification immédiate et définitive.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Article 5 -->
+            <section class="protocol-section" id="article5">
+                <h2><span>🎵</span> Article 5 - Contenu</h2>
+                <div class="protocol-content">
+                    <p>Les morceaux soumis doivent :</p>
+                    <ul>
+                        <li>Être des créations originales du participant</li>
+                        <li>Ne pas contenir de samples non clearés</li>
+                        <li>Respecter les droits d'auteur</li>
+                        <li>Ne pas inciter à la haine, violence ou discrimination</li>
+                    </ul>
+                    <p>
+                        L'organisation se réserve le droit de retirer tout contenu ne respectant pas ces critères.
+                    </p>
+                </div>
+            </section>
+            
+            <!-- Article 6 -->
+            <section class="protocol-section" id="article6">
+                <h2><span>💰</span> Article 6 - Récompenses</h2>
+                <div class="protocol-content">
+                    <p>Les prix sont attribués comme suit :</p>
+                    <ul>
+                        <li><strong>Champion National :</strong> 10 000€ + qualification mondiale</li>
+                        <li><strong>Finaliste National :</strong> 5 000€</li>
+                        <li><strong>Top 8 National :</strong> 1 000€</li>
+                        <li><strong>Champion du Monde :</strong> 100 000€ + contrat label partenaire</li>
+                        <li><strong>Vice-Champion Mondial :</strong> 50 000€</li>
+                    </ul>
+                    <p>
+                        Les gains sont soumis à la fiscalité en vigueur dans le pays de résidence du lauréat.
+                    </p>
+                </div>
+            </section>
+            
+            <!-- Article 7 -->
+            <section class="protocol-section" id="article7">
+                <h2><span>📋</span> Article 7 - Dispositions finales</h2>
+                <div class="protocol-content">
+                    <p>
+                        L'organisation se réserve le droit de modifier le présent règlement à tout moment. Les participants seront informés de toute modification par email et via la plateforme.
+                    </p>
+                    <p>
+                        En cas de litige, seule l'organisation est habilitée à trancher. Ses décisions sont définitives et sans appel.
+                    </p>
+                    <p>
+                        La participation au WRC implique l'acceptation pleine et entière du présent protocole.
+                    </p>
+                </div>
+            </section>
+            
+        </div>
+        
+        <!-- Table of Contents -->
+        <aside class="toc-nav sm:hidden">
+            <div class="glass-card" style="padding: var(--space-4);">
+                <h4 style="font-family: var(--font-display); font-size: var(--text-sm); color: var(--text-muted); margin-bottom: var(--space-4); padding: 0 var(--space-4);">
+                    SOMMAIRE
+                </h4>
+                <nav>
+                    <a href="#article1" class="toc-item">Article 1 - Objet</a>
+                    <a href="#article2" class="toc-item">Article 2 - Éligibilité</a>
+                    <a href="#article3" class="toc-item">Article 3 - Phases</a>
+                    <a href="#article4" class="toc-item">Article 4 - Votes</a>
+                    <a href="#article5" class="toc-item">Article 5 - Contenu</a>
+                    <a href="#article6" class="toc-item">Article 6 - Récompenses</a>
+                    <a href="#article7" class="toc-item">Article 7 - Dispositions</a>
+                </nav>
+            </div>
+        </aside>
+        
+    </div>
+
+</main>
+
+
+
+</div>
+
+<script src="wrc-nav.js"></script>
+<script src="wrc-auth.js"></script>
+<script src="toast.js"></script>
+
+</body>
+</html>

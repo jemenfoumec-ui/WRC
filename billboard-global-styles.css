@@ -1,0 +1,591 @@
+/* ============================================= */
+/* 🏆 BILLBOARD RANKING - VERSION CORRIGÉE      */
+/* Fond propre + Intégration harmonieuse       */
+/* ============================================= */
+
+/* ========== MENU TRANSLATIF - BASE PROPRE ========== */
+.billboard-translative-menu {
+    /* Position fixe correcte */
+    position: fixed !important;
+    left: -420px !important; /* Caché par défaut */
+    top: var(--wrc-header-h, 70px) !important;
+    
+    /* Dimensions */
+    width: 420px !important;
+    max-width: 95vw !important;
+    max-height: calc(100vh - var(--wrc-header-h, 70px) - 20px) !important;
+    
+    /* 🔧 CORRECTION: Fond uni sans dégradé bizarre */
+    background: var(--wrc-bg-card, rgba(18, 18, 28, 0.98)) !important;
+    backdrop-filter: blur(30px) !important;
+    -webkit-backdrop-filter: blur(30px) !important;
+    
+    /* Bordures */
+    border: 1px solid var(--wrc-border, rgba(255, 255, 255, 0.1)) !important;
+    border-left: none !important;
+    border-radius: 0 var(--wrc-radius-xl, 16px) var(--wrc-radius-xl, 16px) 0 !important;
+    
+    /* Ombre subtile */
+    box-shadow: 
+        4px 0 24px rgba(0, 0, 0, 0.3),
+        0 0 40px rgba(139, 92, 246, 0.15) !important;
+    
+    /* Z-index correct */
+    z-index: 950 !important; /* En dessous du header (1000) */
+    
+    /* Animation fluide */
+    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    
+    /* Layout */
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+}
+
+/* État OUVERT */
+.billboard-translative-menu.expanded {
+    left: 0 !important;
+}
+
+/* État CACHÉ */
+.billboard-translative-menu.collapsed {
+    left: -420px !important;
+}
+
+/* ========== BOUTON TOGGLE - SÉPARÉ ========== */
+.billboard-toggle-btn {
+    position: fixed !important;
+    left: 0 !important;
+    top: calc(var(--wrc-header-h, 70px) + 50%) !important;
+    transform: translateY(-50%) !important;
+    
+    /* Dimensions */
+    width: 60px !important;
+    height: 120px !important;
+    
+    /* 🔧 CORRECTION: Fond blanc propre */
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
+    
+    /* Bordures */
+    border: 2px solid rgba(139, 92, 246, 0.3) !important;
+    border-left: none !important;
+    border-radius: 0 14px 14px 0 !important;
+    
+    /* Ombre */
+    box-shadow: 
+        3px 0 16px rgba(0, 0, 0, 0.2),
+        0 4px 20px rgba(139, 92, 246, 0.2) !important;
+    
+    /* Z-index au-dessus du menu */
+    z-index: 960 !important;
+    
+    /* Cursor */
+    cursor: pointer !important;
+    
+    /* Layout */
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    padding: 12px 8px !important;
+    
+    /* Animation */
+    transition: 
+        left 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.3s ease,
+        box-shadow 0.3s ease !important;
+}
+
+/* Quand le menu est ouvert */
+.billboard-translative-menu.expanded ~ .billboard-toggle-btn {
+    left: 420px !important;
+}
+
+/* Hover du bouton */
+.billboard-toggle-btn:hover {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e2e8f0 100%) !important;
+    transform: translateY(-50%) translateX(6px) !important;
+    border-color: var(--wrc-purple, #8b5cf6) !important;
+    box-shadow: 
+        5px 0 20px rgba(0, 0, 0, 0.25),
+        0 6px 24px rgba(139, 92, 246, 0.35) !important;
+}
+
+/* ========== ICÔNE ET TEXTE DU BOUTON ========== */
+.toggle-icon {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+    width: 24px !important;
+    align-items: center !important;
+}
+
+.toggle-icon span,
+.toggle-icon::before,
+.toggle-icon::after {
+    display: block !important;
+    width: 24px !important;
+    height: 3px !important;
+    background: var(--wrc-purple, #8b5cf6) !important;
+    border-radius: 2px !important;
+    transition: all 0.3s ease !important;
+}
+
+.toggle-icon::before,
+.toggle-icon::after {
+    content: '' !important;
+}
+
+.billboard-toggle-btn:hover .toggle-icon::before {
+    transform: translateX(-2px) !important;
+}
+
+.billboard-toggle-btn:hover .toggle-icon::after {
+    transform: translateX(2px) !important;
+}
+
+.toggle-text {
+    font-family: 'Teko', sans-serif !important;
+    font-size: 0.9rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 1.5px !important;
+    writing-mode: vertical-rl !important;
+    text-orientation: mixed !important;
+    color: var(--wrc-purple, #8b5cf6) !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* ========== HEADER DU BILLBOARD ========== */
+.billboard-header-translative {
+    /* 🔧 CORRECTION: Dégradé subtil et propre */
+    background: linear-gradient(135deg, 
+        var(--wrc-purple, #8b5cf6) 0%, 
+        var(--wrc-purple-dark, #6d28d9) 100%) !important;
+    
+    padding: 18px 20px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+    
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    
+    flex-shrink: 0 !important;
+}
+
+.billboard-header-left {
+    flex: 1 !important;
+    min-width: 0 !important;
+}
+
+.billboard-title {
+    font-family: 'Teko', sans-serif !important;
+    font-size: 1.6rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 1.5px !important;
+    margin: 0 0 4px 0 !important;
+    color: white !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+.billboard-subtitle {
+    font-size: 0.8rem !important;
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-weight: 500 !important;
+    margin: 0 !important;
+}
+
+/* Bouton fermer */
+.billboard-close-btn {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+    color: white !important;
+    font-size: 1.3rem !important;
+    font-weight: bold !important;
+    line-height: 1 !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.3s ease !important;
+    flex-shrink: 0 !important;
+}
+
+.billboard-close-btn:hover {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    transform: rotate(90deg) scale(1.1) !important;
+    box-shadow: 0 0 16px rgba(239, 68, 68, 0.6) !important;
+}
+
+/* ========== CONTENU (FADE IN) ========== */
+.billboard-content {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    opacity: 0 !important;
+    transition: opacity 0.3s 0.15s !important;
+    overflow: hidden !important;
+}
+
+.billboard-translative-menu.expanded .billboard-content {
+    opacity: 1 !important;
+}
+
+/* ========== LISTE SCROLLABLE ========== */
+.billboard-list-translative {
+    flex: 1 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    padding: 12px !important;
+    
+    /* 🔧 CORRECTION: Pas de fond bizarre */
+    background: transparent !important;
+    
+    /* Smooth scroll */
+    scroll-behavior: smooth !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+}
+
+/* Scrollbar personnalisée */
+.billboard-list-translative::-webkit-scrollbar {
+    width: 8px !important;
+}
+
+.billboard-list-translative::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border-radius: 4px !important;
+    margin: 4px 0 !important;
+}
+
+.billboard-list-translative::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, 
+        var(--wrc-purple, #8b5cf6), 
+        var(--wrc-purple-dark, #6d28d9)) !important;
+    border-radius: 4px !important;
+    border: 2px solid transparent !important;
+    background-clip: padding-box !important;
+}
+
+.billboard-list-translative::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, 
+        var(--wrc-purple-light, #a78bfa), 
+        var(--wrc-purple, #8b5cf6)) !important;
+    background-clip: padding-box !important;
+}
+
+/* ========== ITEMS DU BILLBOARD ========== */
+.billboard-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding: 10px 12px !important;
+    margin-bottom: 8px !important;
+    
+    /* 🔧 CORRECTION: Fond propre et subtil */
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid var(--wrc-border, rgba(255, 255, 255, 0.08)) !important;
+    border-radius: var(--wrc-radius-md, 10px) !important;
+    
+    cursor: pointer !important;
+    position: relative !important;
+    min-height: 60px !important;
+    
+    transition: all 0.3s ease !important;
+}
+
+/* Barre de gauche au hover */
+.billboard-item::before {
+    content: '' !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    height: 100% !important;
+    width: 3px !important;
+    background: var(--wrc-purple, #8b5cf6) !important;
+    border-radius: var(--wrc-radius-md, 10px) 0 0 var(--wrc-radius-md, 10px) !important;
+    transform: scaleY(0) !important;
+    transition: transform 0.3s ease !important;
+}
+
+.billboard-item:hover {
+    background: rgba(139, 92, 246, 0.12) !important;
+    border-color: rgba(139, 92, 246, 0.3) !important;
+    transform: translateX(4px) !important;
+    box-shadow: 0 4px 16px rgba(139, 92, 246, 0.25) !important;
+}
+
+.billboard-item:hover::before {
+    transform: scaleY(1) !important;
+}
+
+/* Top 3 - Couleurs subtiles */
+.billboard-item.rank-1 {
+    background: linear-gradient(90deg, 
+        rgba(255, 215, 0, 0.1) 0%, 
+        rgba(255, 215, 0, 0.02) 100%) !important;
+    border-color: rgba(255, 215, 0, 0.3) !important;
+}
+
+.billboard-item.rank-2 {
+    background: linear-gradient(90deg, 
+        rgba(192, 192, 192, 0.1) 0%, 
+        rgba(192, 192, 192, 0.02) 100%) !important;
+    border-color: rgba(192, 192, 192, 0.3) !important;
+}
+
+.billboard-item.rank-3 {
+    background: linear-gradient(90deg, 
+        rgba(205, 127, 50, 0.1) 0%, 
+        rgba(205, 127, 50, 0.02) 100%) !important;
+    border-color: rgba(205, 127, 50, 0.3) !important;
+}
+
+/* Numéro de rang */
+.rank-number {
+    font-family: 'Teko', sans-serif !important;
+    font-size: 1.4rem !important;
+    font-weight: 700 !important;
+    min-width: 40px !important;
+    text-align: center !important;
+    color: var(--wrc-text-muted, #64748b) !important;
+    flex-shrink: 0 !important;
+}
+
+.rank-1 .rank-number {
+    color: #ffd700 !important;
+    font-size: 1.8rem !important;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.4) !important;
+}
+
+.rank-2 .rank-number {
+    color: #c0c0c0 !important;
+    font-size: 1.6rem !important;
+}
+
+.rank-3 .rank-number {
+    color: #cd7f32 !important;
+    font-size: 1.5rem !important;
+}
+
+/* Ajustement pour grands numéros */
+.billboard-item[data-rank-digits="2"] .rank-number {
+    font-size: 1.3rem !important;
+}
+
+.billboard-item[data-rank-digits="3"] .rank-number {
+    font-size: 1.1rem !important;
+    letter-spacing: -0.5px !important;
+}
+
+/* Info track */
+.billboard-track-info {
+    flex: 1 !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+}
+
+.billboard-track-title {
+    font-weight: 600 !important;
+    font-size: 0.85rem !important;
+    color: var(--wrc-text, #f8fafc) !important;
+    margin: 0 0 3px 0 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    line-height: 1.2 !important;
+}
+
+.billboard-track-artist {
+    font-size: 0.7rem !important;
+    color: var(--wrc-text-muted, #64748b) !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+/* Badge de tendance */
+.trend-badge {
+    position: absolute !important;
+    top: 6px !important;
+    right: 6px !important;
+    padding: 3px 7px !important;
+    border-radius: 4px !important;
+    font-size: 0.65rem !important;
+    font-weight: 800 !important;
+    font-family: 'Teko', sans-serif !important;
+    letter-spacing: 0.5px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 2px !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+}
+
+.trend-badge.trend-up {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    color: white !important;
+}
+
+.trend-badge.trend-down {
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+    color: white !important;
+}
+
+.trend-badge.trend-new {
+    background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+    color: white !important;
+}
+
+/* Votes */
+.billboard-votes {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    padding-right: 20px !important;
+    flex-shrink: 0 !important;
+}
+
+.votes-count {
+    font-size: 0.75rem !important;
+    font-weight: 700 !important;
+    color: var(--wrc-purple-light, #a78bfa) !important;
+    font-family: 'Teko', sans-serif !important;
+    letter-spacing: 0.5px !important;
+    white-space: nowrap !important;
+}
+
+/* ========== FOOTER ========== */
+.billboard-footer-translative {
+    padding: 14px 16px !important;
+    border-top: 1px solid var(--wrc-border, rgba(255, 255, 255, 0.08)) !important;
+    background: rgba(0, 0, 0, 0.2) !important;
+    flex-shrink: 0 !important;
+}
+
+.billboard-footer-translative .last-update {
+    font-size: 0.7rem !important;
+    color: var(--wrc-text-muted, #64748b) !important;
+    margin-bottom: 8px !important;
+    text-align: center !important;
+    display: block !important;
+}
+
+.billboard-footer-translative .refresh-btn {
+    background: var(--wrc-purple, #8b5cf6) !important;
+    color: white !important;
+    border: none !important;
+    padding: 9px 18px !important;
+    border-radius: var(--wrc-radius-md, 8px) !important;
+    cursor: pointer !important;
+    font-weight: 700 !important;
+    font-size: 0.8rem !important;
+    font-family: 'Teko', sans-serif !important;
+    letter-spacing: 1px !important;
+    width: 100% !important;
+    transition: all 0.3s ease !important;
+}
+
+.billboard-footer-translative .refresh-btn:hover {
+    background: var(--wrc-purple-light, #a78bfa) !important;
+    transform: scale(1.02) !important;
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3) !important;
+}
+
+/* ========== LOADING & EMPTY STATES ========== */
+.loading-state,
+.empty-state {
+    text-align: center !important;
+    padding: 30px 20px !important;
+    color: var(--wrc-text-muted, #64748b) !important;
+    font-style: italic !important;
+    font-size: 0.9rem !important;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+    .billboard-translative-menu {
+        width: 90vw !important;
+        max-width: 360px !important;
+        top: 60px !important;
+    }
+    
+    .billboard-translative-menu.collapsed {
+        left: calc(-90vw) !important;
+    }
+    
+    .billboard-translative-menu.expanded ~ .billboard-toggle-btn {
+        left: 90vw !important;
+        max-left: 360px !important;
+    }
+    
+    .billboard-toggle-btn {
+        width: 50px !important;
+        height: 100px !important;
+        top: calc(60px + 50%) !important;
+    }
+    
+    .toggle-icon span,
+    .toggle-icon::before,
+    .toggle-icon::after {
+        width: 20px !important;
+        height: 2.5px !important;
+    }
+    
+    .toggle-text {
+        font-size: 0.75rem !important;
+    }
+    
+    .billboard-item {
+        padding: 8px 10px !important;
+        gap: 10px !important;
+        min-height: 55px !important;
+    }
+    
+    .rank-number {
+        font-size: 1.2rem !important;
+        min-width: 35px !important;
+    }
+    
+    .rank-1 .rank-number {
+        font-size: 1.5rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .billboard-translative-menu {
+        max-width: 300px !important;
+    }
+    
+    .billboard-toggle-btn {
+        width: 45px !important;
+        height: 90px !important;
+    }
+    
+    .billboard-item {
+        padding: 7px 8px !important;
+        gap: 8px !important;
+        min-height: 50px !important;
+    }
+    
+    .rank-number {
+        font-size: 1rem !important;
+        min-width: 30px !important;
+    }
+    
+    .billboard-track-title {
+        font-size: 0.75rem !important;
+    }
+    
+    .billboard-track-artist {
+        font-size: 0.65rem !important;
+    }
+    
+    .votes-count {
+        font-size: 0.7rem !important;
+    }
+}

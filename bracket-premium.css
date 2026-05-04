@@ -1,0 +1,985 @@
+/* ================================================ */
+/* 🏆 WRC 2026 - BRACKET TREE PREMIUM               */
+/* Version 3.0 - Cyberpunk Theme - Space Optimized  */
+/* Matches Arena Design                              */
+/* ================================================ */
+
+/* ================================================ */
+/* 🎨 VARIABLES - MATCHING ARENA THEME             */
+/* ================================================ */
+:root {
+    /* Cyberpunk Colors */
+    --bracket-neon-cyan: #00fff0;
+    --bracket-neon-magenta: #ff00ff;
+    --bracket-neon-purple: #9d4edd;
+    --bracket-neon-gold: #ffd700;
+    --bracket-fighter-green: #00ff88;
+    --bracket-fighter-red: #ff3366;
+    
+    /* Backgrounds */
+    --bracket-bg: rgba(5, 5, 10, 0.98);
+    --bracket-card-bg: rgba(15, 15, 25, 0.95);
+    --bracket-glass: rgba(255, 255, 255, 0.03);
+    --bracket-border: rgba(255, 255, 255, 0.1);
+    
+    /* States */
+    --bracket-live: #ef4444;
+    --bracket-completed: #4ade80;
+    --bracket-pending: #6b7280;
+    
+    /* Sizing - Compact */
+    --match-width: 140px;
+    --match-height: 70px;
+    --round-gap: 30px;
+    --match-gap: 8px;
+}
+
+/* ================================================ */
+/* 🖼️ MODAL CONTAINER                              */
+/* ================================================ */
+.bracket-tree-modal {
+    position: fixed !important;
+    inset: 0 !important;
+    background: var(--bracket-bg) !important;
+    backdrop-filter: blur(30px) !important;
+    z-index: 10001 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: all 0.3s ease !important;
+}
+
+.bracket-tree-modal.show {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Header */
+.bracket-tree-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 12px 20px !important;
+    background: rgba(15, 15, 25, 0.98) !important;
+    border-bottom: 1px solid rgba(157, 78, 221, 0.4) !important;
+    flex-shrink: 0 !important;
+    position: relative !important;
+    z-index: 10 !important;
+}
+
+.bracket-tree-header::after {
+    content: '' !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 2px !important;
+    background: linear-gradient(90deg, transparent, var(--bracket-neon-purple), transparent) !important;
+}
+
+.bracket-tree-header h2 {
+    font-family: 'Bebas Neue', sans-serif !important;
+    font-size: clamp(1rem, 3vw, 1.4rem) !important;
+    letter-spacing: 3px !important;
+    color: var(--bracket-neon-purple) !important;
+    margin: 0 !important;
+    text-shadow: 0 0 20px rgba(157, 78, 221, 0.5) !important;
+}
+
+.bracket-tree-close {
+    width: 40px !important;
+    height: 40px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 50% !important;
+    color: #fff !important;
+    font-size: 1.5rem !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.bracket-tree-close:hover {
+    background: rgba(239, 68, 68, 0.3) !important;
+    border-color: #ef4444 !important;
+    transform: rotate(90deg) !important;
+}
+
+/* Body - Scrollable */
+.bracket-tree-body {
+    flex: 1 !important;
+    overflow: auto !important;
+    padding: 0 !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: var(--bracket-neon-purple) rgba(255, 255, 255, 0.05) !important;
+}
+
+.bracket-tree-body::-webkit-scrollbar {
+    width: 8px !important;
+    height: 8px !important;
+}
+
+.bracket-tree-body::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02) !important;
+}
+
+.bracket-tree-body::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--bracket-neon-purple), var(--bracket-neon-magenta)) !important;
+    border-radius: 4px !important;
+}
+
+/* ================================================ */
+/* 📊 BRACKET VIEWPORT                             */
+/* ================================================ */
+.bracket-viewport {
+    position: relative !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden !important;
+    background: 
+        radial-gradient(ellipse 50% 30% at 50% 0%, rgba(157, 78, 221, 0.08) 0%, transparent 60%),
+        var(--bracket-bg) !important;
+}
+
+.bracket-scroll-container {
+    width: 100% !important;
+    height: 100% !important;
+    overflow: auto !important;
+    cursor: grab !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: contain !important;
+}
+
+.bracket-scroll-container:active {
+    cursor: grabbing !important;
+}
+
+/* ================================================ */
+/* 🌳 BRACKET TREE CONTAINER                       */
+/* ================================================ */
+.bracket-tree-container {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: var(--round-gap) !important;
+    min-width: max-content !important;
+    padding: 40px 30px !important;
+    transform: scale(var(--zoom-level, 0.6)) !important;
+    transform-origin: center center !important;
+    transition: transform 0.2s ease-out !important;
+}
+
+/* ================================================ */
+/* 📱 BRACKET SIDES                                */
+/* ================================================ */
+.bracket-side {
+    display: flex !important;
+    gap: var(--round-gap) !important;
+    align-items: center !important;
+}
+
+.bracket-side.left {
+    flex-direction: row !important;
+}
+
+.bracket-side.right {
+    flex-direction: row-reverse !important;
+}
+
+/* ================================================ */
+/* 🔢 ROUNDS                                       */
+/* ================================================ */
+.bracket-round {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    min-width: var(--match-width) !important;
+}
+
+.bracket-round-title {
+    font-family: 'Orbitron', monospace !important;
+    font-size: 0.7rem !important;
+    font-weight: 700 !important;
+    color: var(--bracket-neon-cyan) !important;
+    text-align: center !important;
+    padding: 6px 14px !important;
+    background: rgba(0, 255, 240, 0.08) !important;
+    border: 1px solid rgba(0, 255, 240, 0.3) !important;
+    border-radius: 4px !important;
+    margin-bottom: 14px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 2px !important;
+    white-space: nowrap !important;
+}
+
+.bracket-matches {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: var(--match-gap) !important;
+}
+
+/* Progressive spacing by round */
+.bracket-round[data-round="1"] .bracket-matches { gap: 6px !important; }
+.bracket-round[data-round="2"] .bracket-matches { gap: 30px !important; }
+.bracket-round[data-round="3"] .bracket-matches { gap: 80px !important; }
+.bracket-round[data-round="4"] .bracket-matches { gap: 180px !important; }
+.bracket-round[data-round="5"] .bracket-matches { gap: 380px !important; }
+.bracket-round[data-round="6"] .bracket-matches { gap: 780px !important; }
+
+/* ================================================ */
+/* 🎴 MATCH CARDS - COMPACT                        */
+/* ================================================ */
+.bracket-match-container {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+.bracket-match {
+    width: var(--match-width) !important;
+    background: var(--bracket-card-bg) !important;
+    border: 1px solid var(--bracket-border) !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4) !important;
+}
+
+.bracket-match:hover {
+    transform: translateY(-2px) scale(1.03) !important;
+    border-color: var(--bracket-neon-purple) !important;
+    box-shadow: 
+        0 6px 20px rgba(0, 0, 0, 0.5),
+        0 0 20px rgba(157, 78, 221, 0.3) !important;
+    z-index: 10 !important;
+}
+
+/* Match States */
+.bracket-match.active {
+    border-color: var(--bracket-live) !important;
+    box-shadow: 
+        0 0 25px rgba(239, 68, 68, 0.4),
+        0 4px 15px rgba(239, 68, 68, 0.3) !important;
+    animation: matchPulse 2s ease-in-out infinite !important;
+}
+
+@keyframes matchPulse {
+    0%, 100% {
+        box-shadow: 
+            0 0 25px rgba(239, 68, 68, 0.4),
+            0 4px 15px rgba(239, 68, 68, 0.3);
+    }
+    50% {
+        box-shadow: 
+            0 0 40px rgba(239, 68, 68, 0.6),
+            0 6px 20px rgba(239, 68, 68, 0.4);
+    }
+}
+
+.bracket-match.completed {
+    border-color: rgba(157, 78, 221, 0.4) !important;
+}
+
+.bracket-match.pending {
+    opacity: 0.5 !important;
+}
+
+/* Highlighted (when centering) */
+.bracket-match.highlighted {
+    animation: highlightFlash 0.4s ease-out 3 !important;
+}
+
+@keyframes highlightFlash {
+    0%, 100% { 
+        box-shadow: 0 0 25px rgba(255, 215, 0, 0.8); 
+    }
+    50% { 
+        box-shadow: 0 0 50px rgba(255, 215, 0, 1); 
+    }
+}
+
+/* Status Badge */
+.match-status-badge {
+    position: absolute !important;
+    top: 4px !important;
+    right: 4px !important;
+    padding: 2px 6px !important;
+    border-radius: 8px !important;
+    font-family: 'Orbitron', monospace !important;
+    font-size: 0.5rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 3px !important;
+    z-index: 5 !important;
+}
+
+.match-status-badge.live {
+    background: var(--bracket-live) !important;
+    color: white !important;
+}
+
+.match-status-badge.done {
+    background: var(--bracket-completed) !important;
+    color: #000 !important;
+    width: 16px !important;
+    height: 16px !important;
+    padding: 0 !important;
+    justify-content: center !important;
+    border-radius: 50% !important;
+    font-size: 0.6rem !important;
+}
+
+.pulse-dot {
+    width: 5px !important;
+    height: 5px !important;
+    background: white !important;
+    border-radius: 50% !important;
+    animation: pulse 1s ease-in-out infinite !important;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+/* ================================================ */
+/* 👤 PLAYERS - COMPACT                            */
+/* ================================================ */
+.match-player {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 6px 8px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    transition: all 0.2s ease !important;
+    position: relative !important;
+    min-height: 30px !important;
+}
+
+.match-player:last-of-type {
+    border-bottom: none !important;
+}
+
+.match-player.winner {
+    background: linear-gradient(90deg, rgba(0, 255, 136, 0.12), transparent) !important;
+}
+
+.match-player.winner::before {
+    content: '' !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    width: 3px !important;
+    background: var(--bracket-fighter-green) !important;
+    box-shadow: 0 0 8px var(--bracket-fighter-green) !important;
+}
+
+.match-player.loser {
+    opacity: 0.35 !important;
+}
+
+.match-player.loser .player-name {
+    text-decoration: line-through !important;
+    text-decoration-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.match-player.tbd {
+    opacity: 0.3 !important;
+}
+
+/* Avatar - Tiny */
+.player-avatar {
+    width: 22px !important;
+    height: 22px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, var(--bracket-neon-purple), rgba(157, 78, 221, 0.5)) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-family: 'Orbitron', monospace !important;
+    font-size: 0.55rem !important;
+    font-weight: 700 !important;
+    flex-shrink: 0 !important;
+    overflow: hidden !important;
+    color: #fff !important;
+}
+
+.player-avatar img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+
+.match-player.winner .player-avatar {
+    border-color: var(--bracket-fighter-green) !important;
+    box-shadow: 0 0 8px rgba(0, 255, 136, 0.4) !important;
+}
+
+/* Player Info */
+.player-info {
+    flex: 1 !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+}
+
+.player-name {
+    font-family: 'Rajdhani', sans-serif !important;
+    font-size: 0.65rem !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    line-height: 1.2 !important;
+    color: #fff !important;
+}
+
+.player-track {
+    font-size: 0.5rem !important;
+    color: rgba(255, 255, 255, 0.4) !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    display: none !important; /* Hide on compact */
+}
+
+/* Score */
+.player-score {
+    font-family: 'Orbitron', monospace !important;
+    font-size: 0.85rem !important;
+    font-weight: 700 !important;
+    color: rgba(255, 255, 255, 0.4) !important;
+    min-width: 22px !important;
+    text-align: right !important;
+}
+
+.match-player.winner .player-score {
+    color: var(--bracket-neon-cyan) !important;
+    text-shadow: 0 0 8px rgba(0, 255, 240, 0.5) !important;
+}
+
+/* VS separator - Hidden in compact */
+.match-vs {
+    display: none !important;
+}
+
+/* ================================================ */
+/* 🏆 FINAL ZONE                                   */
+/* ================================================ */
+.bracket-final-zone {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 200px !important;
+    padding: 0 20px !important;
+    position: relative !important;
+}
+
+.bracket-final-zone::before {
+    content: '' !important;
+    position: absolute !important;
+    width: 250px !important;
+    height: 250px !important;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.12) 0%, transparent 70%) !important;
+    filter: blur(30px) !important;
+    animation: finalGlow 4s ease-in-out infinite !important;
+    pointer-events: none !important;
+    z-index: -1 !important;
+}
+
+@keyframes finalGlow {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.2); opacity: 1; }
+}
+
+.bracket-final-title {
+    font-family: 'Bebas Neue', sans-serif !important;
+    font-size: 1.5rem !important;
+    font-weight: 400 !important;
+    color: var(--bracket-neon-gold) !important;
+    text-align: center !important;
+    padding: 10px 24px !important;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(157, 78, 221, 0.1)) !important;
+    border: 2px solid var(--bracket-neon-gold) !important;
+    border-radius: 10px !important;
+    margin-bottom: 16px !important;
+    letter-spacing: 4px !important;
+    text-transform: uppercase !important;
+    box-shadow: 
+        0 0 30px rgba(255, 215, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.5) !important;
+}
+
+/* Champion Display */
+.champion-display {
+    text-align: center !important;
+    margin-bottom: 16px !important;
+    padding: 16px !important;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.06) 0%, transparent 70%) !important;
+    border-radius: 12px !important;
+}
+
+.champion-crown {
+    font-size: 3rem !important;
+    animation: crownFloat 3s ease-in-out infinite !important;
+    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8)) !important;
+    margin-bottom: 8px !important;
+}
+
+@keyframes crownFloat {
+    0%, 100% { transform: translateY(0) rotate(-5deg); }
+    50% { transform: translateY(-12px) rotate(5deg); }
+}
+
+.champion-name {
+    font-family: 'Bebas Neue', sans-serif !important;
+    font-size: 1.5rem !important;
+    font-weight: 400 !important;
+    background: linear-gradient(to bottom, var(--bracket-neon-gold), #FFA500) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    letter-spacing: 3px !important;
+    margin-bottom: 4px !important;
+}
+
+.champion-subtitle {
+    font-size: 0.7rem !important;
+    color: rgba(255, 215, 0, 0.6) !important;
+    letter-spacing: 2px !important;
+    text-transform: uppercase !important;
+}
+
+/* Final Placeholder */
+.final-placeholder {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 24px !important;
+    color: rgba(255, 255, 255, 0.4) !important;
+    font-size: 0.8rem !important;
+}
+
+.final-placeholder span:first-child {
+    font-size: 2rem !important;
+    opacity: 0.4 !important;
+}
+
+/* ================================================ */
+/* 🎮 CONTROLS - FLOATING                          */
+/* ================================================ */
+.bracket-controls {
+    position: fixed !important;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px)) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 100 !important;
+    background: rgba(10, 10, 15, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(157, 78, 221, 0.3) !important;
+    border-radius: 12px !important;
+    padding: 10px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    max-width: calc(100vw - 32px) !important;
+}
+
+.bracket-controls-row {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+}
+
+.bracket-control-btn {
+    min-width: 40px !important;
+    min-height: 40px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 2px !important;
+    padding: 6px 10px !important;
+    background: rgba(157, 78, 221, 0.15) !important;
+    border: 1px solid rgba(157, 78, 221, 0.4) !important;
+    border-radius: 8px !important;
+    color: #fff !important;
+    font-size: 1rem !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    position: relative !important;
+}
+
+.bracket-control-btn:hover {
+    background: var(--bracket-neon-purple) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 15px rgba(157, 78, 221, 0.4) !important;
+}
+
+.bracket-control-btn:active {
+    transform: scale(0.95) !important;
+}
+
+.bracket-control-btn:disabled {
+    opacity: 0.3 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+}
+
+.bracket-control-btn.live {
+    background: rgba(239, 68, 68, 0.2) !important;
+    border-color: var(--bracket-live) !important;
+}
+
+.bracket-control-btn.live:hover:not(:disabled) {
+    background: var(--bracket-live) !important;
+}
+
+.bracket-control-btn .btn-label {
+    font-family: 'Orbitron', monospace !important;
+    font-size: 0.5rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px !important;
+    text-transform: uppercase !important;
+}
+
+.bracket-control-btn .badge {
+    position: absolute !important;
+    top: -4px !important;
+    right: -4px !important;
+    min-width: 16px !important;
+    height: 16px !important;
+    padding: 0 4px !important;
+    background: var(--bracket-live) !important;
+    border-radius: 8px !important;
+    font-family: 'Orbitron', monospace !important;
+    font-size: 0.55rem !important;
+    font-weight: 700 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.bracket-zoom-display {
+    font-family: 'Orbitron', monospace !important;
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    color: var(--bracket-neon-cyan) !important;
+    min-width: 45px !important;
+    text-align: center !important;
+}
+
+/* Legend */
+.bracket-legend {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    padding-top: 6px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.legend-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    font-family: 'Rajdhani', sans-serif !important;
+    font-size: 0.6rem !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.legend-dot {
+    width: 6px !important;
+    height: 6px !important;
+    border-radius: 50% !important;
+}
+
+.legend-dot.live {
+    background: var(--bracket-live) !important;
+    animation: pulse 1.5s ease-in-out infinite !important;
+}
+
+.legend-dot.completed {
+    background: var(--bracket-completed) !important;
+}
+
+.legend-dot.pending {
+    background: var(--bracket-pending) !important;
+}
+
+/* Nav hints */
+.bracket-nav-hints {
+    position: fixed !important;
+    top: 70px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    display: flex !important;
+    gap: 12px !important;
+    padding: 6px 12px !important;
+    background: rgba(0, 0, 0, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 16px !important;
+    font-family: 'Rajdhani', sans-serif !important;
+    font-size: 0.65rem !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+    z-index: 50 !important;
+}
+
+.bracket-nav-hints kbd {
+    padding: 2px 5px !important;
+    background: rgba(157, 78, 221, 0.2) !important;
+    border: 1px solid rgba(157, 78, 221, 0.3) !important;
+    border-radius: 3px !important;
+    font-family: 'Orbitron', monospace !important;
+    font-size: 0.55rem !important;
+}
+
+/* ================================================ */
+/* 📱 LOADING & ERROR STATES                       */
+/* ================================================ */
+.bracket-loading,
+.bracket-empty,
+.bracket-error {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 100% !important;
+    min-height: 300px !important;
+    gap: 12px !important;
+    text-align: center !important;
+    padding: 24px !important;
+}
+
+.bracket-spinner {
+    width: 40px !important;
+    height: 40px !important;
+    border: 3px solid rgba(157, 78, 221, 0.2) !important;
+    border-top-color: var(--bracket-neon-purple) !important;
+    border-radius: 50% !important;
+    animation: spin 0.8s linear infinite !important;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.bracket-empty-icon,
+.bracket-error-icon {
+    font-size: 2.5rem !important;
+    opacity: 0.5 !important;
+}
+
+.bracket-empty h3,
+.bracket-error h3 {
+    font-family: 'Bebas Neue', sans-serif !important;
+    font-size: 1.3rem !important;
+    color: #fff !important;
+    letter-spacing: 2px !important;
+}
+
+.bracket-empty p,
+.bracket-error p {
+    color: rgba(255, 255, 255, 0.5) !important;
+    max-width: 280px !important;
+    font-size: 0.85rem !important;
+}
+
+/* ================================================ */
+/* 📱 RESPONSIVE                                   */
+/* ================================================ */
+@media (max-width: 640px) {
+    :root {
+        --match-width: 120px !important;
+        --round-gap: 20px !important;
+    }
+    
+    .bracket-tree-header {
+        padding: 10px 14px !important;
+    }
+    
+    .bracket-tree-header h2 {
+        font-size: 0.9rem !important;
+        letter-spacing: 2px !important;
+    }
+    
+    .bracket-tree-container {
+        padding: 30px 20px !important;
+    }
+    
+    .bracket-round-title {
+        font-size: 0.6rem !important;
+        padding: 4px 10px !important;
+    }
+    
+    .match-player {
+        padding: 5px 6px !important;
+        gap: 4px !important;
+    }
+    
+    .player-avatar {
+        width: 18px !important;
+        height: 18px !important;
+        font-size: 0.5rem !important;
+    }
+    
+    .player-name {
+        font-size: 0.55rem !important;
+    }
+    
+    .player-score {
+        font-size: 0.7rem !important;
+        min-width: 18px !important;
+    }
+    
+    .bracket-final-title {
+        font-size: 1.1rem !important;
+        padding: 8px 16px !important;
+    }
+    
+    .champion-crown {
+        font-size: 2rem !important;
+    }
+    
+    .champion-name {
+        font-size: 1.1rem !important;
+    }
+    
+    .bracket-controls {
+        padding: 8px !important;
+    }
+    
+    .bracket-control-btn {
+        min-width: 36px !important;
+        min-height: 36px !important;
+        font-size: 0.9rem !important;
+    }
+}
+
+@media (min-width: 768px) {
+    :root {
+        --match-width: 160px !important;
+        --round-gap: 40px !important;
+    }
+    
+    .player-track {
+        display: block !important;
+    }
+    
+    .bracket-final-title {
+        font-size: 1.8rem !important;
+    }
+}
+
+@media (min-width: 1024px) {
+    :root {
+        --match-width: 180px !important;
+        --round-gap: 50px !important;
+    }
+    
+    .bracket-controls {
+        position: fixed !important;
+        top: 80px !important;
+        bottom: auto !important;
+        left: auto !important;
+        right: 16px !important;
+        transform: none !important;
+        flex-direction: column !important;
+        max-width: 160px !important;
+    }
+    
+    .bracket-controls-row {
+        flex-wrap: wrap !important;
+    }
+    
+    .bracket-side {
+        gap: 60px !important;
+    }
+}
+
+@media (min-width: 1280px) {
+    :root {
+        --match-width: 200px !important;
+        --round-gap: 60px !important;
+    }
+    
+    .player-avatar {
+        width: 26px !important;
+        height: 26px !important;
+    }
+    
+    .player-name {
+        font-size: 0.75rem !important;
+    }
+    
+    .player-score {
+        font-size: 1rem !important;
+    }
+}
+
+/* ================================================ */
+/* ♿ ACCESSIBILITY                                 */
+/* ================================================ */
+@media (prefers-reduced-motion: reduce) {
+    .bracket-match,
+    .bracket-tree-container,
+    .champion-crown,
+    .bracket-final-zone::before,
+    .bracket-final-title,
+    .bracket-match.active,
+    .pulse-dot {
+        animation: none !important;
+    }
+    
+    .bracket-match:hover {
+        transform: none !important;
+    }
+    
+    * {
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Focus visible */
+.bracket-match:focus-visible,
+.bracket-control-btn:focus-visible {
+    outline: 2px solid var(--bracket-neon-cyan) !important;
+    outline-offset: 2px !important;
+}
+
+/* ================================================ */
+/* 🖨️ PRINT                                        */
+/* ================================================ */
+@media print {
+    .bracket-controls,
+    .bracket-nav-hints,
+    .bracket-tree-close {
+        display: none !important;
+    }
+    
+    .bracket-tree-modal {
+        position: static !important;
+        background: white !important;
+    }
+    
+    .bracket-viewport {
+        height: auto !important;
+        overflow: visible !important;
+    }
+    
+    .bracket-tree-container {
+        transform: scale(0.4) !important;
+    }
+}

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#050508">
+    <title>FAQ | WRC 2026</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Teko:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="wrc-core.css">
+    <link rel="stylesheet" href="wrc-layout.css">
+    <link rel="stylesheet" href="wrc-components.css">
+    
+    <style>
+        .faq-item {
+            background: var(--glass-medium);
+            backdrop-filter: blur(var(--blur-lg));
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            transition: all 280ms var(--ease-out);
+        }
+        
+        .faq-item:hover {
+            border-color: var(--border-medium);
+        }
+        
+        .faq-question {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--space-4);
+            padding: var(--space-5) var(--space-6);
+            cursor: pointer;
+            transition: background 200ms var(--ease-out);
+        }
+        
+        .faq-question:hover {
+            background: var(--glass-light);
+        }
+        
+        .faq-question h3 {
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            font-weight: var(--weight-semibold);
+            color: var(--text-primary);
+            text-transform: none;
+            letter-spacing: normal;
+        }
+        
+        .faq-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: transform 300ms var(--ease-out);
+            flex-shrink: 0;
+        }
+        
+        .faq-item.open .faq-icon {
+            transform: rotate(45deg);
+            color: var(--primary);
+        }
+        
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 300ms var(--ease-out);
+        }
+        
+        .faq-item.open .faq-answer {
+            max-height: 500px;
+        }
+        
+        .faq-answer-content {
+            padding: 0 var(--space-6) var(--space-5);
+            color: var(--text-secondary);
+            line-height: var(--leading-relaxed);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Background -->
+<div class="bg-video">
+    <video autoplay loop muted playsinline>
+        <source src="https://player.vimeo.com/external/517090025.sd.mp4?s=1d57f7247752e503348821045231792102142273&profile_id=164" type="video/mp4">
+    </video>
+</div>
+<div class="bg-grid"></div>
+
+<!-- App Container -->
+<div class="wrc-app">
+
+<div class="wrc-main">
+        <main class="wrc-content wrc-page" id="main-content">
+    
+    <!-- Header -->
+    <section class="wrc-section" style="text-align: center; padding: var(--space-12) 0;">
+        <h1 style="font-family: var(--font-display); font-size: var(--text-6xl); margin-bottom: var(--space-4);">
+            QUESTIONS <span class="text-gradient">FRÉQUENTES</span>
+        </h1>
+        <p style="font-size: var(--text-xl); color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+            Tout ce que tu dois savoir sur le World Rap Championship
+        </p>
+    </section>
+
+    <!-- FAQ List -->
+    <section class="wrc-section" style="max-width: 800px; margin: 0 auto;">
+        <div style="display: flex; flex-direction: column; gap: var(--space-4);" id="faqList">
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <h3>C'est quoi le WRC 2026 ?</h3>
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Le World Rap Championship (WRC) est le premier tournoi mondial de rap opposant 64 nations. Chaque pays sélectionne son champion national qui représentera sa nation dans une compétition internationale. C'est le plus grand événement de rap jamais organisé.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <h3>Comment participer ?</h3>
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        1. Crée ton compte artiste sur le site<br>
+                        2. Upload tes meilleurs morceaux<br>
+                        3. Complète ton profil avec une bio<br>
+                        4. Inscris-toi au tournoi de ton pays<br>
+                        5. Mobilise ta communauté pour voter pour toi !
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <h3>Qui peut voter ?</h3>
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Tout le monde peut devenir membre du jury ! Il suffit de créer un compte "Fan/Jury" sur la plateforme. Chaque vote compte et influence directement le classement des artistes en compétition.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <h3>Quand commence le tournoi France ?</h3>
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        La France est le pays pionnier ! Les qualifications sont déjà ouvertes. Les inscriptions se terminent le 1er mars 2026, et les battles commenceront dès avril 2026.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <h3>Quels sont les prix ?</h3>
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Les prix varient selon les phases :<br><br>
+                        🥇 Champion National : 10 000€ + qualification mondiale<br>
+                        🥈 Finaliste National : 5 000€<br>
+                        🏆 Champion du Monde : 100 000€ + contrat label<br><br>
+                        Sans compter la visibilité internationale !
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <h3>Comment fonctionne le système de vote ?</h3>
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Le classement combine plusieurs facteurs :<br>
+                        • Votes du jury public (50%)<br>
+                        • Engagement sur les morceaux (30%)<br>
+                        • Évaluation du jury expert (20%)<br><br>
+                        Les 32 meilleurs artistes de chaque pays passent en phase de battles.
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="wrc-section" style="max-width: 600px; margin: var(--space-16) auto 0; text-align: center;">
+        <div class="glass-card">
+            <h3 style="font-family: var(--font-display); font-size: var(--text-2xl); margin-bottom: var(--space-4);">
+                Une autre question ?
+            </h3>
+            <p style="color: var(--text-secondary); margin-bottom: var(--space-6);">
+                Notre équipe est là pour t'aider
+            </p>
+            <a href="mailto:contact@wrc2026.com" class="btn btn-primary">
+                NOUS CONTACTER
+            </a>
+        </div>
+    </section>
+
+</main>
+
+<script>
+function toggleFaq(element) {
+    const item = element.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    
+    // Close all
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    
+    // Open clicked if it wasn't open
+    if (!isOpen) {
+        item.classList.add('open');
+    }
+}
+</script>
+
+
+
+</div>
+
+<script src="wrc-nav.js"></script>
+<script src="wrc-auth.js"></script>
+<script src="toast.js"></script>
+
+</body>
+</html>

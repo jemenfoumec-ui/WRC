@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#050508">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Inscription | WRC 2026</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Teko:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="wrc-core.css">
+    <link rel="stylesheet" href="wrc-layout.css">
+    <link rel="stylesheet" href="wrc-components.css">
+</head>
+<body>
+
+<!-- Background -->
+<div class="bg-video">
+    <video autoplay loop muted playsinline>
+        <source src="https://player.vimeo.com/external/517090025.sd.mp4?s=1d57f7247752e503348821045231792102142273&profile_id=164" type="video/mp4">
+    </video>
+</div>
+<div class="bg-grid"></div>
+
+<!-- App Container -->
+<div class="wrc-app">
+    
+    <!-- Main Content -->
+    <div class="wrc-main">
+        <main class="wrc-content wrc-page" id="main-content">
+            
+            <!-- Header -->
+            <section class="wrc-section" style="text-align: center; padding: var(--space-12) 0;">
+                <span class="badge badge-success" style="margin-bottom: var(--space-4);">🇫🇷 INSCRIPTIONS OUVERTES</span>
+                <h1 style="font-family: var(--font-display); font-size: var(--text-6xl); margin-bottom: var(--space-4);">
+                    REJOINS LE <span class="text-gradient">TOURNOI</span>
+                </h1>
+                <p style="font-size: var(--text-xl); color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+                    Représente ta nation et deviens le champion du monde de rap
+                </p>
+            </section>
+
+            <!-- Registration Form -->
+            <section class="wrc-section" style="max-width: 600px; margin: 0 auto;">
+                <div class="glass-card elevated">
+                    <div class="glass-card-header">
+                        <h2 class="glass-card-title">📝 Formulaire d'inscription</h2>
+                    </div>
+                    
+                    <form id="registrationForm">
+                        <div class="input-group">
+                            <label class="input-label">NOM DE SCÈNE *</label>
+                            <input type="text" class="input" id="stageName" placeholder="Ton blase d'artiste" required minlength="2">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">EMAIL *</label>
+                            <input type="email" class="input" id="email" placeholder="ton@email.com" required>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">PAYS</label>
+                            <select class="input" id="country">
+                                <option value="FR">🇫🇷 France</option>
+                                <option value="BE">🇧🇪 Belgique</option>
+                                <option value="CH">🇨🇭 Suisse</option>
+                                <option value="CA">🇨🇦 Canada</option>
+                            </select>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">VILLE</label>
+                            <input type="text" class="input" id="city" placeholder="Ta ville">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">BIO</label>
+                            <textarea class="input" id="bio" placeholder="Parle-nous de toi en quelques lignes..." rows="4"></textarea>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">LIENS (Spotify, YouTube, SoundCloud...)</label>
+                            <input type="url" class="input" id="links" placeholder="https://...">
+                        </div>
+                        
+                        <div style="margin-top: var(--space-6);">
+                            <label style="display: flex; align-items: flex-start; gap: var(--space-3); cursor: pointer;">
+                                <input type="checkbox" id="acceptRules" required style="margin-top: 4px; accent-color: var(--primary);">
+                                <span style="font-size: var(--text-sm); color: var(--text-secondary);">
+                                    J'accepte le <a href="protocol.html" style="color: var(--primary-400);">règlement du tournoi</a> et je certifie avoir plus de 16 ans
+                                </span>
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-lg btn-full" style="margin-top: var(--space-6);">
+                            VALIDER MON INSCRIPTION
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Info Cards -->
+            <section class="wrc-section" style="max-width: 800px; margin: var(--space-16) auto 0;">
+                <div class="wrc-grid wrc-grid-2">
+                    <div class="glass-card">
+                        <h3 style="font-family: var(--font-display); font-size: var(--text-xl); margin-bottom: var(--space-4);">
+                            📋 Ce qu'il te faut
+                        </h3>
+                        <ul style="color: var(--text-secondary); line-height: var(--leading-relaxed); list-style: none; padding: 0;">
+                            <li style="padding: var(--space-2) 0;">✓ Un compte WRC vérifié</li>
+                            <li style="padding: var(--space-2) 0;">✓ Au moins 1 morceau uploadé</li>
+                            <li style="padding: var(--space-2) 0;">✓ Une bio complète</li>
+                            <li style="padding: var(--space-2) 0;">✓ Être majeur ou avoir 16+ ans</li>
+                        </ul>
+                    </div>
+                    <div class="glass-card">
+                        <h3 style="font-family: var(--font-display); font-size: var(--text-xl); margin-bottom: var(--space-4);">
+                            🏆 Ce que tu gagnes
+                        </h3>
+                        <ul style="color: var(--text-secondary); line-height: var(--leading-relaxed); list-style: none; padding: 0;">
+                            <li style="padding: var(--space-2) 0;">🌍 Visibilité internationale</li>
+                            <li style="padding: var(--space-2) 0;">💰 Prix en cash (10 000€+)</li>
+                            <li style="padding: var(--space-2) 0;">🤝 Connexions industrie</li>
+                            <li style="padding: var(--space-2) 0;">👑 Le titre de Champion WRC</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+    
+</div>
+
+<!-- Scripts -->
+<script src="wrc-nav.js"></script>
+<script src="wrc-auth.js"></script>
+<script src="toast.js"></script>
+<script type="module" src="supabaseClient.js"></script>
+<script type="module" src="tournament-registration.js"></script>
+
+</body>
+</html>

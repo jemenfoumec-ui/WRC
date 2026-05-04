@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#050508">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Dashboard | WRC 2026</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Teko:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="wrc-core.css">
+    <link rel="stylesheet" href="wrc-layout.css">
+    <link rel="stylesheet" href="wrc-components.css">
+    <link rel="stylesheet" href="global-player.css">
+</head>
+<body>
+
+<!-- Background -->
+<div class="bg-video">
+    <video autoplay loop muted playsinline>
+        <source src="https://player.vimeo.com/external/517090025.sd.mp4?s=1d57f7247752e503348821045231792102142273&profile_id=164" type="video/mp4">
+    </video>
+</div>
+<div class="bg-grid"></div>
+
+<!-- App Container -->
+<div class="wrc-app">
+    
+    <!-- Main Content -->
+    <div class="wrc-main">
+        <main class="wrc-content wrc-page" id="main-content">
+            
+            <section class="wrc-section">
+                <div class="wrc-section-header">
+                    <div>
+                        <h1 class="wrc-section-title">Dashboard <span class="text-gradient">Jury</span></h1>
+                        <p class="wrc-section-subtitle">Votez pour vos artistes préférés</p>
+                    </div>
+                    <span class="badge badge-live">🔴 EN DIRECT</span>
+                </div>
+            </section>
+
+            <section class="wrc-section">
+                <div class="wrc-grid wrc-grid-4 stagger">
+                    <div class="stat-card">
+                        <div class="stat-icon">🎤</div>
+                        <div class="stat-value" id="totalArtists">0</div>
+                        <div class="stat-label">Artistes</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⚖️</div>
+                        <div class="stat-value" id="totalVotes">0</div>
+                        <div class="stat-label">Mes votes</div>
+                    </div>
+                    <div class="stat-card highlighted">
+                        <div class="stat-icon">🎵</div>
+                        <div class="stat-value" id="totalTracks">0</div>
+                        <div class="stat-label">Morceaux</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-value" id="remainingTime">--</div>
+                        <div class="stat-label">Jours restants</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="wrc-section">
+                <div class="wrc-grid wrc-grid-2">
+                    <div class="glass-card elevated">
+                        <div class="glass-card-header">
+                            <h3 class="glass-card-title">🎤 Artistes en lice</h3>
+                        </div>
+                        <div id="artistsList" style="display: flex; flex-direction: column; gap: var(--space-3);">
+                            <div class="skeleton-item">
+                                <div class="skeleton-box" style="width: 48px; height: 48px; border-radius: 12px;"></div>
+                                <div style="flex: 1;">
+                                    <div class="skeleton-box" style="width: 60%; height: 16px; margin-bottom: 8px;"></div>
+                                    <div class="skeleton-box" style="width: 40%; height: 12px;"></div>
+                                </div>
+                            </div>
+                            <div class="skeleton-item">
+                                <div class="skeleton-box" style="width: 48px; height: 48px; border-radius: 12px;"></div>
+                                <div style="flex: 1;">
+                                    <div class="skeleton-box" style="width: 70%; height: 16px; margin-bottom: 8px;"></div>
+                                    <div class="skeleton-box" style="width: 35%; height: 12px;"></div>
+                                </div>
+                            </div>
+                            <div class="skeleton-item">
+                                <div class="skeleton-box" style="width: 48px; height: 48px; border-radius: 12px;"></div>
+                                <div style="flex: 1;">
+                                    <div class="skeleton-box" style="width: 55%; height: 16px; margin-bottom: 8px;"></div>
+                                    <div class="skeleton-box" style="width: 45%; height: 12px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="leaderboard">
+                        <div class="leaderboard-header">
+                            <h3 class="leaderboard-title">🏆 Classement</h3>
+                        </div>
+                        <div class="leaderboard-list" id="leaderboardList">
+                            <div class="skeleton-item" style="padding: var(--space-4);">
+                                <div class="skeleton-box" style="width: 32px; height: 32px; border-radius: 8px;"></div>
+                                <div class="skeleton-box" style="width: 44px; height: 44px; border-radius: 12px;"></div>
+                                <div style="flex: 1;">
+                                    <div class="skeleton-box" style="width: 50%; height: 14px; margin-bottom: 6px;"></div>
+                                    <div class="skeleton-box" style="width: 30%; height: 10px;"></div>
+                                </div>
+                            </div>
+                            <div class="skeleton-item" style="padding: var(--space-4);">
+                                <div class="skeleton-box" style="width: 32px; height: 32px; border-radius: 8px;"></div>
+                                <div class="skeleton-box" style="width: 44px; height: 44px; border-radius: 12px;"></div>
+                                <div style="flex: 1;">
+                                    <div class="skeleton-box" style="width: 60%; height: 14px; margin-bottom: 6px;"></div>
+                                    <div class="skeleton-box" style="width: 25%; height: 10px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+    
+</div>
+
+<!-- Player Bar -->
+<div id="globalPlayer" class="wrc-player visible">
+    <audio id="globalAudioElement"></audio>
+    <div class="player-inner">
+        <div class="player-track-info">
+            <div class="player-cover">🎵</div>
+            <div class="player-details">
+                <div class="player-title" id="playerTrackTitle">Aucun titre</div>
+                <div class="player-artist" id="playerTrackArtist">Artiste</div>
+            </div>
+        </div>
+        <div class="player-controls">
+            <button class="player-btn" id="playerPrevBtn">⏮</button>
+            <button class="player-btn player-btn-main" id="playerPlayPauseBtn">▶</button>
+            <button class="player-btn" id="playerNextBtn">⏭</button>
+        </div>
+        <div class="player-progress" id="playerProgressContainer">
+            <span class="player-time" id="playerCurrentTime">0:00</span>
+            <div class="player-progress-bar-bg">
+                <div class="player-progress-bar" id="playerProgressBar"></div>
+            </div>
+            <span class="player-time" id="playerTotalTime">0:00</span>
+        </div>
+        <div class="player-volume">
+            <button class="player-btn" id="playerMuteBtn">🔊</button>
+            <input type="range" class="player-slider player-volume-slider" id="playerVolumeSlider" value="80" min="0" max="100">
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="wrc-nav.js"></script>
+<script src="wrc-auth.js"></script>
+<script src="toast.js"></script>
+<script type="module" src="supabaseClient.js"></script>
+<script type="module" src="globalPlayer.js"></script>
+<script type="module" src="dashboard.js"></script>
+
+</body>
+</html>

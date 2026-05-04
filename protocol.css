@@ -1,0 +1,29 @@
+:root { --bg: #050505; --purple: #7b2cbf; --blue: #3a0ca3; --gold: #FFD700; --white: #fff; }
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background-color: var(--bg); color: var(--white); font-family: 'Inter', sans-serif; overflow-x: hidden; transition: background 0.8s; }
+
+.timeline-track { position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 2px; height: 100vh; background: rgba(255,255,255,0.05); z-index: 1; }
+.timeline-progress { position: absolute; top: 0; left: 0; width: 100%; height: 0%; background: linear-gradient(to bottom, var(--blue), var(--purple), var(--gold)); box-shadow: 0 0 15px var(--purple); }
+
+.scroll-arrow { position: absolute; left: 50%; transform: translateX(-50%); font-size: 1.2rem; color: var(--purple); animation: bounce 2s infinite; }
+.scroll-arrow.top { top: 20px; } .scroll-arrow.bottom { bottom: 20px; }
+
+.phase-section { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 80px 20px; position: relative; z-index: 2; text-align: center; }
+.phase-content { max-width: 600px; opacity: 0; transform: translateY(40px); transition: 1s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.phase-section.visible .phase-content { opacity: 1; transform: translateY(0); }
+
+h2 { font-family: 'Teko', sans-serif; font-size: 5rem; line-height: 0.8; margin-bottom: 30px; text-transform: uppercase; }
+.phase-desc { color: #cecece; line-height: 1.8; font-weight: 300; margin-bottom: 35px; font-size: 1.15rem; max-width: 550px; margin-left: auto; margin-right: auto; }
+.phase-desc strong { color: #fff; font-weight: 700; }
+
+.phase-tag { display: inline-block; border: 1px solid var(--purple); color: var(--purple); padding: 4px 18px; font-size: 0.7rem; font-weight: 800; letter-spacing: 4px; margin-bottom: 25px; }
+.data-box { display: inline-block; padding: 12px 25px; border-left: 3px solid var(--purple); font-family: monospace; font-size: 0.8rem; background: rgba(255,255,255,0.03); }
+
+.text-blue { color: var(--blue); text-shadow: 0 0 15px var(--blue); }
+.text-purple { color: var(--purple); text-shadow: 0 0 15px var(--purple); }
+.text-gold { color: var(--gold); text-shadow: 0 0 25px rgba(255, 215, 0, 0.4); }
+
+.final-cta { background: var(--gold); color: #000; border: none; padding: 20px 50px; font-family: 'Teko', sans-serif; font-size: 1.6rem; letter-spacing: 2px; cursor: pointer; margin-top: 30px; font-weight: 600; }
+
+@keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(10px); } }

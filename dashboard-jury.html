@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#050508">
+    <title>Jury Panel | WRC 2026</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Teko:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="wrc-core.css">
+    <link rel="stylesheet" href="wrc-layout.css">
+    <link rel="stylesheet" href="wrc-components.css">
+    <link rel="stylesheet" href="global-player.css">
+    
+    <style>
+        /* Jury accent color */
+        .jury-accent { color: var(--success); }
+        .jury-glow { box-shadow: 0 0 30px rgba(16, 185, 129, 0.3); }
+        
+        .jury-stat-card {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, var(--glass-medium) 100%);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+        
+        .jury-stat-card:hover {
+            border-color: rgba(16, 185, 129, 0.4);
+        }
+        
+        .artist-vote-card {
+            background: var(--glass-medium);
+            backdrop-filter: blur(var(--blur-lg));
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-xl);
+            padding: var(--space-4);
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            transition: all 280ms var(--ease-out);
+        }
+        
+        .artist-vote-card:hover {
+            border-color: var(--border-medium);
+            transform: translateX(4px);
+        }
+        
+        .artist-vote-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-xl);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent-pink) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        
+        .artist-vote-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .artist-vote-name {
+            font-weight: var(--weight-semibold);
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+        
+        .artist-vote-meta {
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+        }
+        
+        .vote-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .vote-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-light);
+            background: var(--glass-light);
+            cursor: pointer;
+            transition: all 200ms var(--ease-out);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        .vote-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .vote-btn.like:hover {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: var(--success);
+        }
+        
+        .vote-btn.dislike:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: var(--error);
+        }
+        
+        .vote-btn.voted {
+            background: var(--success);
+            border-color: var(--success);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Background -->
+<div class="bg-video">
+    <video autoplay loop muted playsinline>
+        <source src="https://player.vimeo.com/external/517090025.sd.mp4?s=1d57f7247752e503348821045231792102142273&profile_id=164" type="video/mp4">
+    </video>
+</div>
+<div class="bg-grid"></div>
+
+<!-- App Container -->
+<div class="wrc-app">
+
+<div class="wrc-main">
+        <main class="wrc-content wrc-page" id="main-content">
+    
+    <!-- Header -->
+    <section class="wrc-section">
+        <div class="wrc-section-header">
+            <div>
+                <span class="badge badge-success" style="margin-bottom: var(--space-3);">⚖️ JURY OFFICIEL</span>
+                <h1 class="wrc-section-title">Panel <span class="jury-accent">Jury</span></h1>
+                <p class="wrc-section-subtitle">Évaluez les artistes en compétition</p>
+            </div>
+            <div class="wrc-section-actions">
+                <span class="badge badge-live">🔴 Session Active</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="wrc-section">
+        <div class="wrc-grid wrc-grid-4 stagger">
+            <div class="stat-card jury-stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, var(--success) 0%, #059669 100%);">✅</div>
+                <div class="stat-value" id="myVotes">0</div>
+                <div class="stat-label">Mes Votes</div>
+            </div>
+            <div class="stat-card jury-stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, var(--success) 0%, #059669 100%);">🎤</div>
+                <div class="stat-value" id="artistsToVote">0</div>
+                <div class="stat-label">À évaluer</div>
+            </div>
+            <div class="stat-card jury-stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, var(--success) 0%, #059669 100%);">🎵</div>
+                <div class="stat-value" id="tracksListened">0</div>
+                <div class="stat-label">Écoutés</div>
+            </div>
+            <div class="stat-card jury-stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, var(--success) 0%, #059669 100%);">⏱️</div>
+                <div class="stat-value" id="timeRemaining">--</div>
+                <div class="stat-label">Jours restants</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="wrc-section">
+        <div class="wrc-grid wrc-grid-2">
+            
+            <!-- Artists to Vote -->
+            <div class="glass-card elevated">
+                <div class="glass-card-header">
+                    <div>
+                        <h3 class="glass-card-title">🎤 Artistes à évaluer</h3>
+                        <p class="glass-card-subtitle">Écoutez et votez</p>
+                    </div>
+                    <button class="btn btn-sm btn-ghost" id="btnShuffle">🔀 Mélanger</button>
+                </div>
+                
+                <div id="artistsToVoteList" style="display: flex; flex-direction: column; gap: var(--space-3); max-height: 500px; overflow-y: auto;">
+                    
+                    <!-- Artist Vote Card Template -->
+                    <div class="artist-vote-card">
+                        <div class="artist-vote-avatar">🎤</div>
+                        <div class="artist-vote-info">
+                            <div class="artist-vote-name">Artiste Example</div>
+                            <div class="artist-vote-meta">Paris, France • 3 morceaux</div>
+                        </div>
+                        <button class="btn btn-sm btn-primary" onclick="playArtist(1)">▶ Écouter</button>
+                        <div class="vote-actions">
+                            <button class="vote-btn like" title="Voter pour">👍</button>
+                            <button class="vote-btn dislike" title="Passer">👎</button>
+                        </div>
+                    </div>
+                    
+                    <div style="padding: var(--space-6); text-align: center; color: var(--text-muted);">
+                        Chargement des artistes...
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <!-- Voting History -->
+            <div class="glass-card elevated">
+                <div class="glass-card-header">
+                    <div>
+                        <h3 class="glass-card-title">📊 Mon historique</h3>
+                        <p class="glass-card-subtitle">Vos derniers votes</p>
+                    </div>
+                </div>
+                
+                <div id="votingHistory" style="display: flex; flex-direction: column; gap: var(--space-3); max-height: 500px; overflow-y: auto;">
+                    <div style="padding: var(--space-6); text-align: center; color: var(--text-muted);">
+                        Aucun vote enregistré
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    <!-- Now Playing -->
+    <section class="wrc-section">
+        <div class="glass-card" id="nowPlayingCard" style="display: none;">
+            <div class="glass-card-header">
+                <h3 class="glass-card-title">🎵 En écoute</h3>
+            </div>
+            <div style="display: flex; align-items: center; gap: var(--space-6);">
+                <div style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary) 0%, var(--accent-cyan) 100%); border-radius: var(--radius-xl); display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                    🎵
+                </div>
+                <div style="flex: 1;">
+                    <div style="font-size: var(--text-xl); font-weight: var(--weight-semibold); margin-bottom: var(--space-1);" id="npTrackTitle">-</div>
+                    <div style="color: var(--text-secondary);" id="npArtistName">-</div>
+                </div>
+                <div style="display: flex; gap: var(--space-3);">
+                    <button class="btn btn-icon btn-ghost" id="npPrev">⏮</button>
+                    <button class="btn btn-icon btn-primary" id="npPlay">▶</button>
+                    <button class="btn btn-icon btn-ghost" id="npNext">⏭</button>
+                </div>
+            </div>
+            <div style="margin-top: var(--space-4);">
+                <div style="height: 4px; background: var(--glass-light); border-radius: var(--radius-full); overflow: hidden;">
+                    <div style="width: 30%; height: 100%; background: var(--success); border-radius: var(--radius-full);" id="npProgress"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: var(--space-2); font-size: var(--text-xs); color: var(--text-muted);">
+                    <span id="npCurrentTime">0:00</span>
+                    <span id="npTotalTime">0:00</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- Player Bar -->
+<div id="globalPlayer" class="wrc-player visible">
+    <audio id="globalAudioElement"></audio>
+    <div class="player-inner">
+        <div class="player-track-info">
+            <div class="player-cover">🎵</div>
+            <div class="player-details">
+                <div class="player-title" id="playerTrackTitle">Aucun titre</div>
+                <div class="player-artist" id="playerTrackArtist">Artiste</div>
+            </div>
+        </div>
+        <div class="player-controls">
+            <button class="player-btn" id="playerPrevBtn">⏮</button>
+            <button class="player-btn player-btn-main" id="playerPlayPauseBtn">▶</button>
+            <button class="player-btn" id="playerNextBtn">⏭</button>
+        </div>
+        <div class="player-progress" id="playerProgressContainer">
+            <span class="player-time" id="playerCurrentTime">0:00</span>
+            <div class="player-progress-bar-bg">
+                <div class="player-progress-bar" id="playerProgressBar"></div>
+            </div>
+            <span class="player-time" id="playerTotalTime">0:00</span>
+        </div>
+        <div class="player-volume">
+            <button class="player-btn" id="playerMuteBtn">🔊</button>
+            <input type="range" class="player-slider player-volume-slider" id="playerVolumeSlider" value="80" min="0" max="100">
+        </div>
+    </div>
+</div>
+
+</div>
+
+<script src="wrc-nav.js"></script>
+<script src="wrc-auth.js"></script>
+<script src="toast.js"></script>
+<script type="module" src="supabaseClient.js"></script>
+<script type="module" src="globalPlayer.js"></script>
+<script type="module" src="dashboard-jury.js"></script>
+
+</body>
+</html>

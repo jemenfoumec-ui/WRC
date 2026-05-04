@@ -1,0 +1,952 @@
+/* ============================================= */
+/* 🎤 WRC 2026 - TOURNAMENT ARENA MOBILE-FIRST  */
+/* Version 2.0 - Optimisé smartphones            */
+/* ============================================= */
+
+/* ============================================= */
+/* 📱 ARENA LAYOUT                              */
+/* ============================================= */
+
+.page-arena {
+    --arena-bg: #050508;
+    --fighter-blue: #3b82f6;
+    --fighter-red: #ef4444;
+}
+
+.arena-page {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background: var(--arena-bg);
+}
+
+.arena-main {
+    flex: 1;
+    padding: calc(var(--header-height, 60px) + 12px) 12px 16px;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* ============================================= */
+/* 📱 STATUS BAR                                */
+/* ============================================= */
+
+.battle-status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.battle-status-bar::-webkit-scrollbar {
+    display: none;
+}
+
+.status-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 50px;
+    flex-shrink: 0;
+    padding: 0 8px;
+}
+
+.status-label {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.status-value {
+    font-family: var(--font-head);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-main);
+    white-space: nowrap;
+}
+
+.status-value.live {
+    color: var(--live);
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Phase Indicator */
+.phase-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: rgba(123, 44, 191, 0.2);
+    border: 1px solid var(--primary);
+    border-radius: var(--radius-full);
+}
+
+.phase-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--primary);
+    animation: pulse 1s ease-in-out infinite;
+}
+
+.phase-name {
+    font-family: var(--font-head);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--primary-light);
+    letter-spacing: 0.5px;
+}
+
+/* Viewers Badge */
+.viewers-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: var(--radius-full);
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.viewers-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--live);
+    border-radius: 50%;
+    animation: pulse 1s ease-in-out infinite;
+}
+
+/* ============================================= */
+/* 📱 FIGHTERS DISPLAY - MOBILE STACK           */
+/* ============================================= */
+
+.arena-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.fighter-container {
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: var(--transition-base);
+    position: relative;
+    overflow: hidden;
+}
+
+.fighter-container.side-a {
+    border-color: rgba(59, 130, 246, 0.5);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), var(--bg-card));
+}
+
+.fighter-container.side-b {
+    border-color: rgba(239, 68, 68, 0.5);
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.08), var(--bg-card));
+}
+
+.fighter-container.playing {
+    box-shadow: 0 0 30px rgba(123, 44, 191, 0.3);
+}
+
+.fighter-container.playing::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(123, 44, 191, 0.1), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Fighter Avatar */
+.fighter-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 3px solid var(--border);
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+}
+
+.fighter-container.side-a .fighter-avatar {
+    border-color: var(--fighter-blue);
+}
+
+.fighter-container.side-b .fighter-avatar {
+    border-color: var(--fighter-red);
+}
+
+.fighter-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.fighter-avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-head);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+/* Fighter Info */
+.fighter-info {
+    flex: 1;
+    min-width: 0;
+    position: relative;
+    z-index: 1;
+}
+
+.fighter-name {
+    font-family: var(--font-head);
+    font-size: 1.25rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 2px;
+}
+
+.fighter-track {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.fighter-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: var(--radius-full);
+    font-size: 0.65rem;
+    font-weight: 600;
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.fighter-status.playing {
+    background: rgba(74, 222, 128, 0.2);
+    color: var(--success);
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.fighter-status.waiting {
+    background: rgba(245, 158, 11, 0.2);
+    color: var(--warning);
+}
+
+.fighter-status.winner {
+    background: rgba(255, 215, 0, 0.2);
+    color: var(--gold);
+}
+
+/* Fighter Score */
+.fighter-score {
+    font-family: var(--font-head);
+    font-size: 2rem;
+    font-weight: 700;
+    min-width: 50px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.fighter-container.side-a .fighter-score {
+    color: var(--fighter-blue);
+}
+
+.fighter-container.side-b .fighter-score {
+    color: var(--fighter-red);
+}
+
+/* VS Separator */
+.vs-separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 0;
+}
+
+.vs-text {
+    font-family: var(--font-head);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-shadow: 0 0 20px var(--primary-glow);
+}
+
+/* ============================================= */
+/* 📱 AUDIO PLAYER                              */
+/* ============================================= */
+
+.battle-player {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 12px;
+}
+
+.player-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.player-artwork {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.player-artwork img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.player-track-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.player-track-name {
+    font-family: var(--font-head);
+    font-size: 1rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.player-artist-name {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* Player Controls */
+.player-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.arena-control-btn {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(123, 44, 191, 0.2);
+    border: 2px solid var(--primary);
+    border-radius: 50%;
+    color: var(--text-main);
+    font-size: 1.1rem;
+    transition: var(--transition-fast);
+    cursor: pointer;
+}
+
+.arena-control-btn:hover,
+.arena-control-btn:focus {
+    background: var(--primary);
+    transform: scale(1.05);
+}
+
+.arena-control-btn:active {
+    transform: scale(0.98);
+}
+
+.arena-control-btn.play-btn {
+    width: 56px;
+    height: 56px;
+    font-size: 1.3rem;
+}
+
+.arena-control-btn.muted {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: var(--error);
+}
+
+/* Volume */
+.arena-volume-control {
+    display: none; /* Hidden on mobile */
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+}
+
+.arena-volume-slider {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: var(--radius-full);
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+}
+
+.arena-volume-slider::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    background: var(--primary);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* Progress */
+.player-progress {
+    margin-top: 12px;
+}
+
+.progress-bar-container {
+    height: 6px;
+    background: var(--border);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    border-radius: var(--radius-full);
+    transition: width 0.1s linear;
+}
+
+.progress-time {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-family: var(--font-head);
+}
+
+/* ============================================= */
+/* 📱 VOTING SECTION                            */
+/* ============================================= */
+
+.vote-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 16px;
+}
+
+.vote-section-title {
+    font-family: var(--font-head);
+    font-size: 1.1rem;
+    text-align: center;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.vote-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.vote-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 12px;
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: var(--transition-base);
+    min-height: 90px;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid transparent;
+    background: transparent;
+}
+
+.vote-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: var(--transition-fast);
+}
+
+.vote-btn:hover::before,
+.vote-btn:focus::before {
+    opacity: 1;
+}
+
+.vote-btn-left {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.5);
+}
+
+.vote-btn-left::before {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), transparent);
+}
+
+.vote-btn-left:hover,
+.vote-btn-left:focus,
+.vote-btn-left.selected {
+    border-color: var(--fighter-blue);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+.vote-btn-right {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.5);
+}
+
+.vote-btn-right::before {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), transparent);
+}
+
+.vote-btn-right:hover,
+.vote-btn-right:focus,
+.vote-btn-right.selected {
+    border-color: var(--fighter-red);
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+}
+
+.vote-btn.selected {
+    transform: scale(1.02);
+}
+
+.vote-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.vote-btn:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.vote-icon {
+    font-family: var(--font-head);
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 6px;
+    position: relative;
+    z-index: 1;
+}
+
+.vote-btn-left .vote-icon { color: var(--fighter-blue); }
+.vote-btn-right .vote-icon { color: var(--fighter-red); }
+
+.vote-label {
+    font-family: var(--font-head);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    position: relative;
+    z-index: 1;
+    text-transform: uppercase;
+}
+
+/* Vote Results */
+.vote-results {
+    margin-top: 12px;
+}
+
+.vote-results-bar {
+    height: 8px;
+    background: var(--border);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    display: flex;
+    margin-bottom: 8px;
+}
+
+.vote-bar-fill {
+    height: 100%;
+    transition: width 0.5s ease;
+}
+
+.vote-bar-fill.vote-left {
+    background: linear-gradient(90deg, var(--fighter-blue), #60a5fa);
+}
+
+.vote-bar-fill.vote-right {
+    background: linear-gradient(90deg, #f87171, var(--fighter-red));
+}
+
+.vote-counts {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-head);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.count-left { color: var(--fighter-blue); }
+.count-right { color: var(--fighter-red); }
+
+/* ============================================= */
+/* 📱 BRACKET TOGGLE                            */
+/* ============================================= */
+
+.bracket-tree-toggle {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    border: none;
+    border-radius: var(--radius-full);
+    color: var(--text-main);
+    font-family: var(--font-head);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+    z-index: var(--z-sticky);
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.bracket-tree-toggle:hover,
+.bracket-tree-toggle:focus {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg), 0 0 30px var(--primary-glow);
+}
+
+.bracket-tree-toggle:active {
+    transform: translateY(0);
+}
+
+/* ============================================= */
+/* 📱 WINNER OVERLAY                            */
+/* ============================================= */
+
+.winner-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 5, 10, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: var(--z-modal);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition-base);
+}
+
+.winner-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.winner-content {
+    max-width: 400px;
+    width: 100%;
+}
+
+.winner-badge {
+    font-size: 3.5rem;
+    margin-bottom: 16px;
+    animation: bounce 1s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.winner-title {
+    font-family: var(--font-head);
+    font-size: 2.5rem;
+    color: var(--gold);
+    text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+    margin-bottom: 12px;
+}
+
+.winner-name {
+    font-family: var(--font-head);
+    font-size: 2rem;
+    margin-bottom: 8px;
+}
+
+.winner-track-title {
+    font-size: 1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 24px;
+}
+
+.winner-stats {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-bottom: 24px;
+}
+
+.winner-stat {
+    text-align: center;
+}
+
+.winner-stat-value {
+    display: block;
+    font-family: var(--font-head);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-light);
+}
+
+.winner-stat-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-next-battle {
+    padding: 14px 32px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    border: none;
+    border-radius: var(--radius-md);
+    color: var(--text-main);
+    font-family: var(--font-head);
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.btn-next-battle:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow);
+}
+
+/* ============================================= */
+/* 💻 TABLET (min-width: 640px)                 */
+/* ============================================= */
+
+@media (min-width: 640px) {
+    .arena-main {
+        padding: calc(var(--header-height, 60px) + 20px) 20px 24px;
+        gap: 16px;
+    }
+    
+    .battle-status-bar {
+        justify-content: center;
+        gap: 24px;
+        padding: 12px 24px;
+    }
+    
+    .status-info {
+        min-width: 70px;
+    }
+    
+    .status-value {
+        font-size: 1.2rem;
+    }
+    
+    /* Side by side fighters */
+    .arena-wrapper {
+        flex-direction: row;
+        align-items: stretch;
+    }
+    
+    .fighter-container {
+        flex: 1;
+        flex-direction: column;
+        text-align: center;
+        padding: 24px;
+    }
+    
+    .fighter-avatar {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 12px;
+    }
+    
+    .fighter-info {
+        text-align: center;
+    }
+    
+    .fighter-name {
+        font-size: 1.5rem;
+    }
+    
+    .fighter-score {
+        font-size: 2.5rem;
+        margin-top: 12px;
+    }
+    
+    .vs-separator {
+        padding: 0 16px;
+        align-self: center;
+    }
+    
+    .vs-text {
+        font-size: 2.5rem;
+    }
+    
+    .vote-btn {
+        min-height: 110px;
+        padding: 24px;
+    }
+    
+    .vote-icon {
+        font-size: 3rem;
+    }
+    
+    .arena-volume-control {
+        display: flex;
+    }
+    
+    .bracket-tree-toggle {
+        bottom: 24px;
+        right: 24px;
+    }
+}
+
+/* ============================================= */
+/* 💻 DESKTOP (min-width: 1024px)               */
+/* ============================================= */
+
+@media (min-width: 1024px) {
+    .arena-main {
+        padding: calc(var(--header-height, 80px) + 32px) 32px 32px;
+        gap: 24px;
+    }
+    
+    .battle-status-bar {
+        position: sticky;
+        top: calc(var(--header-height, 80px) + 12px);
+        z-index: var(--z-sticky);
+        background: rgba(10, 10, 15, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+    }
+    
+    .fighter-container {
+        max-width: 400px;
+        padding: 32px;
+    }
+    
+    .fighter-avatar {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .fighter-name {
+        font-size: 1.75rem;
+    }
+    
+    .battle-player {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .vote-section {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .bracket-tree-toggle {
+        top: calc(var(--header-height, 80px) + 16px);
+        bottom: auto;
+        right: 32px;
+    }
+}
+
+/* ============================================= */
+/* 💻 LARGE DESKTOP (min-width: 1280px)         */
+/* ============================================= */
+
+@media (min-width: 1280px) {
+    .fighter-container {
+        max-width: 450px;
+    }
+    
+    .fighter-avatar {
+        width: 140px;
+        height: 140px;
+    }
+}
+
+/* ============================================= */
+/* 🔄 ANIMATIONS                                */
+/* ============================================= */
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .fighter-container.playing::before,
+    .winner-badge,
+    .phase-dot,
+    .viewers-dot {
+        animation: none;
+    }
+}

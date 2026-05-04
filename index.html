@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#050508">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>WRC 2026 - World Rap Championship</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Teko:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Core Design System -->
+    <link rel="stylesheet" href="wrc-core.css">
+    <link rel="stylesheet" href="wrc-layout.css">
+    <link rel="stylesheet" href="wrc-components.css">
+    <link rel="stylesheet" href="global-player.css">
+</head>
+<body>
+
+<!-- Background -->
+<div class="bg-video">
+    <video autoplay loop muted playsinline>
+        <source src="https://player.vimeo.com/external/517090025.sd.mp4?s=1d57f7247752e503348821045231792102142273&profile_id=164" type="video/mp4">
+    </video>
+</div>
+<div class="bg-grid"></div>
+
+<!-- App Container -->
+<div class="wrc-app">
+    
+    <!-- Sidebar (injected by wrc-nav.js) -->
+    
+    <!-- Main Content -->
+    <div class="wrc-main">
+        <main class="wrc-content wrc-page" id="main-content">
+            
+            <!-- HERO -->
+            <section class="wrc-hero">
+                <h1 class="wrc-hero-title">
+                    UN RAPPEUR.<br>
+                    <span class="text-gradient">UNE NATION.</span><br>
+                    UN CHAMPION.
+                </h1>
+                <p class="wrc-hero-subtitle">
+                    64 Nations. Un seul vainqueur. Le plus grand tournoi de rap de l'histoire commence ici.
+                </p>
+                <div class="wrc-hero-actions">
+                    <button class="btn btn-primary btn-lg" onclick="window.openAuth && window.openAuth('artist')">
+                        REPRÉSENTER LA FRANCE
+                    </button>
+                    <button class="btn btn-outline btn-lg" onclick="window.openAuth && window.openAuth('fan')">
+                        ÊTRE JURY
+                    </button>
+                </div>
+            </section>
+
+            <!-- COUNTDOWN -->
+            <section class="wrc-section">
+                <div class="countdown" id="countdown">
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="days">00</div>
+                        <div class="countdown-label">Jours</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="hours">00</div>
+                        <div class="countdown-label">Heures</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="minutes">00</div>
+                        <div class="countdown-label">Minutes</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="seconds">00</div>
+                        <div class="countdown-label">Secondes</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- HOW IT WORKS -->
+            <section class="wrc-section">
+                <div class="wrc-section-header">
+                    <div>
+                        <h2 class="wrc-section-title">
+                            COMMENT <span class="text-gradient">PARTICIPER</span> ?
+                        </h2>
+                    </div>
+                </div>
+                
+                <div class="wrc-grid wrc-grid-4 stagger">
+                    <div class="step-card">
+                        <div class="step-number">01</div>
+                        <h3 class="step-title">INSCRIPTION</h3>
+                        <p class="step-desc">Créez votre profil artiste et uploadez vos sons.</p>
+                        <span class="badge badge-success" style="margin-top: var(--space-4);">🇫🇷 FRANCE : OUVERT</span>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">02</div>
+                        <h3 class="step-title">ENGAGEMENT</h3>
+                        <p class="step-desc">Mobilisez votre communauté. Likes, Partages = Points.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">03</div>
+                        <h3 class="step-title">BATTLES</h3>
+                        <p class="step-desc">Les 32 meilleurs s'affrontent en 1 contre 1.</p>
+                    </div>
+                    <div class="step-card highlight">
+                        <div class="step-number">04</div>
+                        <h3 class="step-title">MONDIAL</h3>
+                        <p class="step-desc">Le champion national affronte le reste du monde.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- NATIONS -->
+            <section class="wrc-section">
+                <div class="wrc-grid wrc-grid-4 stagger">
+                    <div class="nation-card pioneer">
+                        <span class="nation-badge">PAYS PIONNIER</span>
+                        <img src="https://flagcdn.com/w160/fr.png" alt="France" class="nation-flag" loading="lazy">
+                        <h4 class="nation-name">FRANCE</h4>
+                        <span class="nation-status live">QUALIFICATIONS EN COURS</span>
+                        <p style="font-size: var(--text-sm); color: var(--text-tertiary); margin-top: var(--space-3);">
+                            Le berceau du WRC. C'est ici que tout commence.
+                        </p>
+                    </div>
+                    <div class="nation-card">
+                        <img src="https://flagcdn.com/w160/us.png" alt="USA" class="nation-flag" loading="lazy">
+                        <h4 class="nation-name">USA</h4>
+                        <span class="nation-status soon">BIENTÔT</span>
+                        <button class="btn btn-sm btn-ghost" style="margin-top: var(--space-3);">ME NOTIFIER</button>
+                    </div>
+                    <div class="nation-card">
+                        <img src="https://flagcdn.com/w160/gb.png" alt="UK" class="nation-flag" loading="lazy">
+                        <h4 class="nation-name">ROYAUME-UNI</h4>
+                        <span class="nation-status soon">BIENTÔT</span>
+                    </div>
+                    <div class="nation-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                        <div style="font-family: var(--font-display); font-size: var(--text-6xl); font-weight: var(--weight-bold); color: var(--primary-400);">+61</div>
+                        <h4 class="nation-name" style="margin-top: var(--space-2);">NATIONS</h4>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STATS -->
+            <section class="wrc-section">
+                <div class="wrc-section-header">
+                    <div>
+                        <span class="badge badge-primary" style="margin-bottom: var(--space-3);">🇫🇷 PHASE 1 : FRANCE</span>
+                        <h2 class="wrc-section-title">
+                            SUIVEZ LE <span class="text-gradient">MOUVEMENT</span>
+                        </h2>
+                    </div>
+                </div>
+                
+                <div class="wrc-grid wrc-grid-3 stagger">
+                    <div class="stat-card">
+                        <div class="stat-icon">🎤</div>
+                        <div class="stat-value" id="statRappers">0</div>
+                        <div class="stat-label">Rappeurs inscrits</div>
+                    </div>
+                    <div class="stat-card highlighted">
+                        <div class="stat-icon">⚖️</div>
+                        <div class="stat-value" id="statVotes">0</div>
+                        <div class="stat-label">Votes du Jury</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-value" id="statDays">7</div>
+                        <div class="stat-label">Jours restants</div>
+                    </div>
+                </div>
+                
+                <!-- Mini Leaderboard -->
+                <div class="leaderboard" style="margin-top: var(--space-8);">
+                    <div class="leaderboard-header">
+                        <h3 class="leaderboard-title">🏆 TOP 3 ACTUEL (LIVE)</h3>
+                    </div>
+                    <div class="leaderboard-list" id="leaderboardLive">
+                        <div style="padding: var(--space-8); text-align: center; color: var(--text-muted);">
+                            Aucun participant pour le moment
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FINAL CTA -->
+            <section class="wrc-section" style="text-align: center; padding: var(--space-16) 0;">
+                <h3 style="font-family: var(--font-display); font-size: var(--text-3xl); color: var(--text-primary); margin-bottom: var(--space-6);">
+                    PRÊT À ENTRER DANS L'ARÈNE ?
+                </h3>
+                <button class="btn btn-primary btn-xl" onclick="window.openAuth && window.openAuth('artist')">
+                    CRÉER MON PROFIL
+                </button>
+            </section>
+
+            <!-- Footer -->
+            <footer style="text-align: center; padding: var(--space-6); border-top: 1px solid var(--border-light); color: var(--text-muted); font-size: var(--text-sm);">
+                WRC // GLOBAL ARENA // 2026
+            </footer>
+
+        </main>
+    </div>
+    
+</div>
+
+<!-- Scripts -->
+<script>
+// Countdown
+(function() {
+    const target = new Date('2026-06-01T00:00:00').getTime();
+    
+    function update() {
+        const now = Date.now();
+        const diff = target - now;
+        
+        if (diff <= 0) return;
+        
+        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((diff % (1000 * 60)) / 1000);
+        
+        document.getElementById('days').textContent = String(d).padStart(2, '0');
+        document.getElementById('hours').textContent = String(h).padStart(2, '0');
+        document.getElementById('minutes').textContent = String(m).padStart(2, '0');
+        document.getElementById('seconds').textContent = String(s).padStart(2, '0');
+    }
+    
+    update();
+    setInterval(update, 1000);
+})();
+</script>
+
+<script src="wrc-nav.js"></script>
+<script src="wrc-auth.js"></script>
+<script src="toast.js"></script>
+<script type="module" src="supabaseClient.js"></script>
+<script type="module" src="script.js"></script>
+
+<!-- Global Player -->
+<div id="globalPlayer" class="wrc-player visible" style="left: 0;">
+    <audio id="globalAudioElement"></audio>
+    <div class="player-inner">
+        <div class="player-track-info">
+            <div class="player-cover">🎵</div>
+            <div class="player-details">
+                <div class="player-title" id="playerTrackTitle">WRC 2026</div>
+                <div class="player-artist" id="playerTrackArtist">Bienvenue</div>
+            </div>
+        </div>
+        <div class="player-controls">
+            <button class="player-btn" id="playerPrevBtn">⏮</button>
+            <button class="player-btn player-btn-main" id="playerPlayPauseBtn">▶</button>
+            <button class="player-btn" id="playerNextBtn">⏭</button>
+        </div>
+        <div class="player-progress" id="playerProgressContainer">
+            <span class="player-time" id="playerCurrentTime">0:00</span>
+            <div class="player-progress-bar-bg">
+                <div class="player-progress-bar" id="playerProgressBar"></div>
+            </div>
+            <span class="player-time" id="playerTotalTime">0:00</span>
+        </div>
+        <div class="player-volume">
+            <button class="player-btn" id="playerMuteBtn">🔊</button>
+            <input type="range" class="player-slider player-volume-slider" id="playerVolumeSlider" value="80" min="0" max="100">
+        </div>
+    </div>
+</div>
+<script type="module" src="globalPlayer.js"></script>
+
+</body>
+</html>

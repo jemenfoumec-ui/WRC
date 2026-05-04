@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#050508">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>WRC 2026 // ARÈNE</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Teko:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Core Design System -->
+    <link rel="stylesheet" href="wrc-core.css">
+    <link rel="stylesheet" href="wrc-layout.css">
+    <link rel="stylesheet" href="wrc-components.css">
+    <!-- Arena Specific -->
+    <link rel="stylesheet" href="tournament-arena.css">
+    <link rel="stylesheet" href="tournament-arena-mobile.css">
+    <link rel="stylesheet" href="bracket-premium.css">
+    <link rel="stylesheet" href="bracket-tree-mobile.css">
+    
+    <style>
+        /* Arena Page Specific Overrides */
+        .page-arena .wrc-sidebar { z-index: 9999; }
+        .page-arena .wrc-main { padding-top: 0; }
+        .page-arena .wrc-content { padding: 0; max-width: none; }
+        
+        /* Arena full height layout */
+        .arena-fullscreen {
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-void);
+        }
+        
+        /* Arena header */
+        .arena-top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-4) var(--space-6);
+            background: var(--glass-solid);
+            border-bottom: 1px solid var(--border-light);
+            flex-shrink: 0;
+        }
+        
+        .arena-title {
+            font-family: var(--font-display);
+            font-size: var(--text-2xl);
+            font-weight: var(--weight-bold);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+        
+        .arena-status {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+        }
+        
+        .arena-live-badge {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-2) var(--space-4);
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            border-radius: var(--radius-full);
+            font-size: var(--text-sm);
+            font-weight: var(--weight-bold);
+            color: var(--error);
+        }
+        
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--error);
+            border-radius: 50%;
+            animation: pulse-dot 1.5s infinite;
+        }
+        
+        .arena-viewers {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+        }
+        
+        /* Arena main content */
+        .arena-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: var(--space-6);
+            gap: var(--space-6);
+            overflow: auto;
+        }
+        
+        /* Fighters wrapper */
+        .fighters-arena {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: var(--space-8);
+            padding: var(--space-8);
+            background: var(--glass-medium);
+            backdrop-filter: blur(var(--blur-xl));
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-3xl);
+            flex: 1;
+            min-height: 400px;
+        }
+        
+        .fighter-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-4);
+            padding: var(--space-6);
+            background: var(--glass-light);
+            border: 2px solid transparent;
+            border-radius: var(--radius-2xl);
+            transition: all 300ms var(--ease-out);
+            cursor: pointer;
+        }
+        
+        .fighter-card:hover {
+            border-color: var(--border-medium);
+            transform: scale(1.02);
+        }
+        
+        .fighter-card.blue { border-color: rgba(59, 130, 246, 0.4); }
+        .fighter-card.red { border-color: rgba(239, 68, 68, 0.4); }
+        .fighter-card.winner { border-color: var(--accent-gold); box-shadow: 0 0 30px var(--accent-gold-glow); }
+        
+        .fighter-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: var(--radius-2xl);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent-pink) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .fighter-name {
+            font-family: var(--font-display);
+            font-size: var(--text-3xl);
+            font-weight: var(--weight-bold);
+            color: var(--text-primary);
+            text-align: center;
+        }
+        
+        .fighter-country {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .fighter-score {
+            font-family: var(--font-mono);
+            font-size: var(--text-5xl);
+            font-weight: var(--weight-bold);
+            color: var(--text-primary);
+        }
+        
+        /* VS Badge */
+        .vs-badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .vs-text {
+            font-family: var(--font-display);
+            font-size: var(--text-4xl);
+            font-weight: var(--weight-bold);
+            color: var(--primary);
+            text-shadow: 0 0 20px var(--primary-glow);
+        }
+        
+        .vs-round {
+            font-size: var(--text-xs);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: var(--tracking-widest);
+        }
+        
+        /* Vote buttons */
+        .arena-actions {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-6);
+            padding: var(--space-6);
+            background: var(--glass-heavy);
+            border-radius: var(--radius-2xl);
+        }
+        
+        .vote-btn {
+            padding: var(--space-4) var(--space-10);
+            font-family: var(--font-display);
+            font-size: var(--text-xl);
+            font-weight: var(--weight-bold);
+            border-radius: var(--radius-xl);
+            cursor: pointer;
+            transition: all 200ms var(--ease-out);
+            border: 2px solid;
+        }
+        
+        .vote-btn.blue {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            border-color: #3b82f6;
+            color: white;
+        }
+        
+        .vote-btn.red {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            border-color: #ef4444;
+            color: white;
+        }
+        
+        .vote-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        
+        /* Bracket button */
+        .bracket-toggle {
+            position: fixed;
+            bottom: var(--space-6);
+            right: var(--space-6);
+            z-index: 100;
+        }
+        
+        @media (max-width: 1023px) {
+            .fighters-arena {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr auto 1fr;
+                padding: var(--space-4);
+                gap: var(--space-4);
+            }
+            
+            .fighter-avatar {
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
+            }
+            
+            .fighter-name {
+                font-size: var(--text-xl);
+            }
+            
+            .arena-actions {
+                flex-direction: column;
+                gap: var(--space-3);
+            }
+            
+            .vote-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="page-arena">
+
+<!-- Background -->
+<div class="bg-video">
+    <video autoplay loop muted playsinline>
+        <source src="https://player.vimeo.com/external/517090025.sd.mp4?s=1d57f7247752e503348821045231792102142273&profile_id=164" type="video/mp4">
+    </video>
+</div>
+
+<!-- App Container -->
+<div class="wrc-app">
+    
+    <!-- Main Content -->
+    <div class="wrc-main">
+
+<!-- Auth System -->
+
+<!-- Navigation -->
+
+
+<!-- Background -->
+<div class="bg-video">
+    <video autoplay loop muted playsinline>
+        <source src="https://player.vimeo.com/external/517090025.sd.mp4?s=1d57f7247752e503348821045231792102142273&profile_id=164" type="video/mp4">
+    </video>
+</div>
+
+<!-- Main Content -->
+<main class="wrc-content" id="main-content">
+    <div class="arena-fullscreen">
+        
+        <!-- Top Bar -->
+        <header class="arena-top-bar">
+            <h1 class="arena-title">
+                <span>🎤</span>
+                <span>WRC ARENA</span>
+            </h1>
+            <div class="arena-status">
+                <div class="arena-live-badge">
+                    <span class="live-dot"></span>
+                    <span>LIVE</span>
+                </div>
+                <div class="arena-viewers">
+                    <span>👁</span>
+                    <span id="viewerCount">0</span>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Arena Main -->
+        <div class="arena-main">
+            
+            <!-- Fighters -->
+            <div class="fighters-arena">
+                <!-- Fighter Blue -->
+                <div class="fighter-card blue" id="fighterBlue">
+                    <div class="fighter-avatar">🎤</div>
+                    <h2 class="fighter-name" id="blueName">Challenger A</h2>
+                    <div class="fighter-country">
+                        <img src="https://flagcdn.com/w40/fr.png" alt="FR" style="width: 24px; border-radius: 4px;">
+                        <span>France</span>
+                    </div>
+                    <div class="fighter-score" id="blueScore">0</div>
+                </div>
+                
+                <!-- VS -->
+                <div class="vs-badge">
+                    <span class="vs-round" id="roundInfo">ROUND 1</span>
+                    <span class="vs-text">VS</span>
+                    <span class="vs-round" id="matchInfo">Match #1</span>
+                </div>
+                
+                <!-- Fighter Red -->
+                <div class="fighter-card red" id="fighterRed">
+                    <div class="fighter-avatar">🎤</div>
+                    <h2 class="fighter-name" id="redName">Challenger B</h2>
+                    <div class="fighter-country">
+                        <img src="https://flagcdn.com/w40/fr.png" alt="FR" style="width: 24px; border-radius: 4px;">
+                        <span>France</span>
+                    </div>
+                    <div class="fighter-score" id="redScore">0</div>
+                </div>
+            </div>
+            
+            <!-- Vote Actions -->
+            <div class="arena-actions">
+                <button class="vote-btn blue" id="voteBlue">
+                    VOTER BLEU
+                </button>
+                <button class="vote-btn red" id="voteRed">
+                    VOTER ROUGE
+                </button>
+            </div>
+            
+        </div>
+        
+    </div>
+</main>
+    </div>
+</div>
+
+<!-- Bracket Toggle -->
+<button class="btn btn-primary btn-lg bracket-toggle" id="btnOpenBracket">
+    📊 BRACKET
+</button>
+
+<!-- Scripts -->
+<script src="wrc-nav.js"></script>
+<script src="wrc-auth.js"></script>
+<script src="toast.js"></script>
+<script type="module" src="supabaseClient.js"></script>
+<script type="module" src="tournament-arena.js"></script>
+<script type="module" src="bracket-renderer.js"></script>
+<script>
+    // Setup bracket button
+    document.addEventListener('DOMContentLoaded', () => {
+        const btnBracket = document.getElementById('btnOpenBracket');
+        if (btnBracket) {
+            btnBracket.addEventListener('click', () => {
+                if (window.openBracketTreeOptimized) {
+                    window.openBracketTreeOptimized();
+                } else {
+                    console.error('Bracket not loaded');
+                    window.showToast?.('Bracket en cours de chargement...', 'info');
+                }
+            });
+        }
+    });
+</script>
+
+</body>
+</html>

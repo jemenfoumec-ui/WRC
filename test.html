@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WRC Test</title>
+    <link rel="stylesheet" href="wrc-core.css">
+    <link rel="stylesheet" href="wrc-layout.css">
+    <link rel="stylesheet" href="wrc-components.css">
+</head>
+<body style="background: #050508;">
+
+<!-- Test sans scripts -->
+<div style="position: fixed; inset: 0; background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(34, 211, 238, 0.05)); pointer-events: none;"></div>
+
+<div class="wrc-app" style="display: flex; min-height: 100vh;">
+    
+    <!-- Sidebar Simple -->
+    <aside style="width: 72px; background: rgba(12, 12, 18, 0.95); backdrop-filter: blur(20px); border-right: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0;">
+        <div style="height: 72px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(255,255,255,0.08);">
+            <span style="font-size: 24px;">🎤</span>
+        </div>
+        <nav style="padding: 16px 0; flex: 1;">
+            <a href="#" style="display: flex; width: 48px; height: 48px; margin: 0 auto 8px; background: rgba(139, 92, 246, 0.2); border-radius: 12px; align-items: center; justify-content: center; color: #a78bfa; text-decoration: none;">🏠</a>
+            <a href="#" style="display: flex; width: 48px; height: 48px; margin: 0 auto 8px; background: transparent; border-radius: 12px; align-items: center; justify-content: center; color: #71717a; text-decoration: none;">🏆</a>
+            <a href="#" style="display: flex; width: 48px; height: 48px; margin: 0 auto 8px; background: transparent; border-radius: 12px; align-items: center; justify-content: center; color: #71717a; text-decoration: none;">📊</a>
+        </nav>
+    </aside>
+    
+    <!-- Main Content -->
+    <div class="wrc-main" style="flex: 1; margin-left: 72px; min-height: 100vh; position: relative; z-index: 1;">
+        <main class="wrc-content" style="max-width: 1400px; margin: 0 auto; padding: 24px;">
+            
+            <!-- Hero -->
+            <section style="text-align: center; padding: 80px 0;">
+                <h1 style="font-family: 'Teko', sans-serif; font-size: clamp(3rem, 10vw, 5rem); font-weight: 700; color: #fafafa; line-height: 1.1; margin-bottom: 24px;">
+                    UN RAPPEUR.<br>
+                    <span style="background: linear-gradient(135deg, #8b5cf6, #22d3ee); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">UNE NATION.</span><br>
+                    UN CHAMPION.
+                </h1>
+                <p style="font-size: 1.25rem; color: #a1a1aa; max-width: 600px; margin: 0 auto 32px;">
+                    64 Nations. Un seul vainqueur. Le plus grand tournoi de rap de l'histoire commence ici.
+                </p>
+                <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                    <button class="btn btn-primary btn-lg">REPRÉSENTER LA FRANCE</button>
+                    <button class="btn btn-outline btn-lg">ÊTRE JURY</button>
+                </div>
+            </section>
+            
+            <!-- Stats -->
+            <section style="padding: 48px 0;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px;">
+                    <div class="stat-card">
+                        <div class="stat-icon">🎤</div>
+                        <div class="stat-value">247</div>
+                        <div class="stat-label">Rappeurs</div>
+                    </div>
+                    <div class="stat-card highlighted">
+                        <div class="stat-icon">⚖️</div>
+                        <div class="stat-value">12K</div>
+                        <div class="stat-label">Votes</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-value">7</div>
+                        <div class="stat-label">Jours</div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Glass Card Test -->
+            <section style="padding: 48px 0;">
+                <div class="glass-card elevated">
+                    <div class="glass-card-header">
+                        <h3 class="glass-card-title">🏆 Test Glass Card</h3>
+                    </div>
+                    <p style="color: #a1a1aa;">Si vous voyez ceci, le CSS fonctionne correctement !</p>
+                </div>
+            </section>
+            
+        </main>
+    </div>
+    
+</div>
+
+</body>
+</html>

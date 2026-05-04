@@ -1,0 +1,834 @@
+/* ============================================= */
+/* 🎤 WRC 2026 - TOURNAMENT ARENA OPTIMIZED     */
+/* Version 3.0 - 100+ Users, No Scroll Design   */
+/* Mobile-First, Performance-Focused            */
+/* ============================================= */
+
+/* ============================================= */
+/* 🎯 VARIABLES OPTIMISÉES                      */
+/* ============================================= */
+:root {
+    --arena-header-h: 60px;
+    --arena-status-h: 45px;
+    --arena-fighter-h: 140px;
+    --arena-player-h: 70px;
+    --arena-vote-h: 200px;
+    --arena-gap: 12px;
+    
+    --fighter-blue: #00ff88;
+    --fighter-red: #ff0066;
+    --arena-primary: #7b2cbf;
+    --arena-bg: rgba(10, 10, 15, 0.95);
+}
+
+/* ============================================= */
+/* 🖼️ PAGE LAYOUT - COMPACT & FIXED             */
+/* ============================================= */
+.page-arena {
+    background: #050508;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: hidden;
+}
+
+.tournament-container {
+    position: fixed;
+    top: var(--arena-header-h);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* ============================================= */
+/* 📊 STATUS BAR - ULTRA COMPACT                 */
+/* ============================================= */
+.battle-status-bar {
+    position: fixed !important;
+    top: var(--arena-header-h) !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: var(--arena-status-h) !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 0 16px !important;
+    background: var(--arena-bg) !important;
+    backdrop-filter: blur(15px) !important;
+    border-bottom: 1px solid rgba(123, 44, 191, 0.3) !important;
+    z-index: 998 !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5) !important;
+    gap: 8px !important;
+}
+
+.status-primary {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.status-timer {
+    font-family: 'Teko', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+    min-width: 60px;
+    text-align: center;
+}
+
+.status-phase {
+    font-family: 'Teko', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--arena-primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.status-secondary {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.status-viewers,
+.status-match-id {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Masquer les labels verbeux sur mobile */
+.status-label {
+    display: none;
+}
+
+.status-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+}
+
+.status-value {
+    font-family: 'Teko', sans-serif;
+    font-weight: 700;
+    color: #fff;
+}
+
+/* ============================================= */
+/* 🥊 FIGHTERS - COMPACT SIDE BY SIDE           */
+/* ============================================= */
+.arena-wrapper {
+    margin-top: calc(var(--arena-header-h) + var(--arena-status-h) + var(--arena-gap)) !important;
+    padding: var(--arena-gap) 12px !important;
+    display: grid !important;
+    grid-template-columns: 1fr auto 1fr !important;
+    gap: 12px !important;
+    align-items: center !important;
+    height: var(--arena-fighter-h) !important;
+    max-width: 1200px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.fighter-container {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 12px !important;
+    background: rgba(10, 10, 15, 0.6) !important;
+    border: 2px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 12px !important;
+    backdrop-filter: blur(10px) !important;
+    transition: all 0.3s ease !important;
+    position: relative !important;
+}
+
+.fighter-container.playing {
+    border-color: var(--arena-primary) !important;
+    box-shadow: 0 0 20px rgba(123, 44, 191, 0.5) !important;
+}
+
+.fighter-container.fighter-left {
+    border-color: rgba(0, 255, 136, 0.3) !important;
+}
+
+.fighter-container.fighter-right {
+    border-color: rgba(255, 0, 102, 0.3) !important;
+}
+
+.fighter-avatar {
+    width: 80px !important;
+    height: 80px !important;
+    border-radius: 50% !important;
+    border: 3px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 0 15px rgba(123, 44, 191, 0.4) !important;
+    overflow: hidden !important;
+    position: relative !important;
+}
+
+.fighter-avatar img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+
+.fighter-status {
+    position: absolute !important;
+    bottom: -8px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    background: var(--arena-bg) !important;
+    border: 2px solid var(--arena-primary) !important;
+    padding: 2px 10px !important;
+    border-radius: 12px !important;
+    font-size: 0.65rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.5px !important;
+    white-space: nowrap !important;
+}
+
+.fighter-status.status-playing {
+    border-color: #4ade80 !important;
+    color: #4ade80 !important;
+    animation: pulse 1.5s infinite !important;
+}
+
+.fighter-info {
+    text-align: center !important;
+    width: 100% !important;
+}
+
+.fighter-name {
+    font-family: 'Teko', sans-serif !important;
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    color: #fff !important;
+    margin-bottom: 2px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.fighter-country {
+    font-size: 0.75rem !important;
+    color: #888 !important;
+}
+
+.vs-separator {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.vs-badge {
+    font-family: 'Teko', sans-serif !important;
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+    color: var(--arena-primary) !important;
+    text-shadow: 0 0 15px rgba(123, 44, 191, 0.8) !important;
+}
+
+/* ============================================= */
+/* 🎵 AUDIO PLAYER - INLINE COMPACT             */
+/* ============================================= */
+.battle-player {
+    margin: 0 12px var(--arena-gap) !important;
+    padding: 12px 16px !important;
+    background: var(--arena-bg) !important;
+    border: 1px solid rgba(123, 44, 191, 0.3) !important;
+    border-radius: 10px !important;
+    backdrop-filter: blur(10px) !important;
+    max-width: 1200px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.player-track-info {
+    text-align: center !important;
+    margin-bottom: 10px !important;
+}
+
+.track-title {
+    font-family: 'Teko', sans-serif !important;
+    font-size: 1.2rem !important;
+    font-weight: 600 !important;
+    color: #fff !important;
+}
+
+.player-controls {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+
+.control-btn {
+    width: 40px !important;
+    height: 40px !important;
+    flex-shrink: 0 !important;
+    background: rgba(123, 44, 191, 0.3) !important;
+    border: 2px solid var(--arena-primary) !important;
+    border-radius: 50% !important;
+    color: #fff !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: all 0.2s !important;
+}
+
+.control-btn:active {
+    transform: scale(0.9) !important;
+}
+
+.control-btn.muted {
+    background: rgba(239, 68, 68, 0.3) !important;
+    border-color: #ef4444 !important;
+}
+
+.volume-slider {
+    flex: 1 !important;
+    max-width: 100px !important;
+    height: 4px !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 2px !important;
+    outline: none !important;
+    cursor: pointer !important;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    width: 14px !important;
+    height: 14px !important;
+    background: var(--arena-primary) !important;
+    border-radius: 50% !important;
+    cursor: pointer !important;
+    box-shadow: 0 0 8px rgba(123, 44, 191, 0.6) !important;
+}
+
+.volume-slider::-moz-range-thumb {
+    width: 14px !important;
+    height: 14px !important;
+    background: var(--arena-primary) !important;
+    border-radius: 50% !important;
+    border: none !important;
+    cursor: pointer !important;
+}
+
+.volume-value {
+    font-family: 'Teko', sans-serif !important;
+    font-size: 0.9rem !important;
+    font-weight: 700 !important;
+    color: var(--arena-primary) !important;
+    min-width: 40px !important;
+    text-align: center !important;
+}
+
+.player-progress {
+    flex: 1 !important;
+}
+
+.progress-bar-container {
+    position: relative !important;
+    height: 6px !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 3px !important;
+    overflow: hidden !important;
+    cursor: pointer !important;
+}
+
+.progress-bar {
+    height: 100% !important;
+    background: linear-gradient(90deg, var(--arena-primary), #9d4edd) !important;
+    border-radius: 3px !important;
+    transition: width 0.1s linear !important;
+    box-shadow: 0 0 8px rgba(123, 44, 191, 0.5) !important;
+}
+
+.progress-time {
+    display: flex !important;
+    justify-content: space-between !important;
+    margin-top: 4px !important;
+    font-family: 'Teko', sans-serif !important;
+    font-size: 0.75rem !important;
+    color: #888 !important;
+}
+
+/* ============================================= */
+/* 🗳️ VOTE SECTION - PRIORITY PLACEMENT         */
+/* ============================================= */
+.vote-section {
+    margin: 0 12px var(--arena-gap) !important;
+    padding: 16px !important;
+    background: var(--arena-bg) !important;
+    border: 2px solid var(--arena-primary) !important;
+    border-radius: 12px !important;
+    backdrop-filter: blur(10px) !important;
+    box-shadow: 0 4px 20px rgba(123, 44, 191, 0.4) !important;
+    max-width: 1200px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.section-title {
+    font-family: 'Teko', sans-serif !important;
+    font-size: 1.5rem !important;
+    text-align: center !important;
+    color: #fff !important;
+    margin-bottom: 12px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 2px !important;
+}
+
+.vote-buttons {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+    margin-bottom: 12px !important;
+}
+
+.vote-btn {
+    min-height: 80px !important;
+    padding: 16px 12px !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    border: 3px solid !important;
+    background: rgba(0, 0, 0, 0.3) !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.vote-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.vote-btn-left {
+    border-color: var(--fighter-blue) !important;
+}
+
+.vote-btn-left::before {
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), transparent);
+}
+
+.vote-btn-right {
+    border-color: var(--fighter-red) !important;
+}
+
+.vote-btn-right::before {
+    background: linear-gradient(135deg, rgba(255, 0, 102, 0.2), transparent);
+}
+
+.vote-btn:hover::before,
+.vote-btn.selected::before {
+    opacity: 1;
+}
+
+.vote-btn.selected {
+    border-width: 4px !important;
+    box-shadow: 0 0 25px currentColor !important;
+}
+
+.vote-btn:active {
+    transform: scale(0.95) !important;
+}
+
+.vote-btn:disabled {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+}
+
+.vote-icon {
+    font-family: 'Teko', sans-serif !important;
+    font-size: 2.5rem !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+.vote-btn-left .vote-icon {
+    color: var(--fighter-blue) !important;
+}
+
+.vote-btn-right .vote-icon {
+    color: var(--fighter-red) !important;
+}
+
+.vote-label {
+    font-family: 'Teko', sans-serif !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 1px !important;
+    text-transform: uppercase !important;
+    color: #fff !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+/* Vote Results Bar */
+.vote-results-bar {
+    position: relative !important;
+    height: 40px !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    display: flex !important;
+    margin-bottom: 10px !important;
+}
+
+.vote-bar-fill {
+    height: 100% !important;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-family: 'Teko', sans-serif !important;
+    font-size: 1.2rem !important;
+    font-weight: 700 !important;
+}
+
+.vote-left {
+    background: linear-gradient(90deg, var(--fighter-blue), #00cc6a) !important;
+    color: #000 !important;
+}
+
+.vote-right {
+    background: linear-gradient(90deg, #ff3366, var(--fighter-red)) !important;
+    color: #fff !important;
+}
+
+.vote-counts {
+    display: flex !important;
+    justify-content: space-between !important;
+    font-family: 'Teko', sans-serif !important;
+    font-size: 1.2rem !important;
+    font-weight: 700 !important;
+}
+
+.count-left {
+    color: var(--fighter-blue) !important;
+}
+
+.count-right {
+    color: var(--fighter-red) !important;
+}
+
+/* Animation des compteurs */
+.vote-counts span {
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.vote-counts span.animating {
+    color: #4ade80;
+    transform: scale(1.15);
+}
+
+/* ============================================= */
+/* 🏆 WINNER OVERLAY                             */
+/* ============================================= */
+.winner-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    background: rgba(0, 0, 0, 0.98) !important;
+    backdrop-filter: blur(20px) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 10000 !important;
+    padding: 20px !important;
+}
+
+.winner-overlay.hidden {
+    display: none !important;
+}
+
+.winner-content {
+    text-align: center !important;
+    padding: 40px 30px !important;
+    background: var(--arena-bg) !important;
+    border: 3px solid #FFD700 !important;
+    border-radius: 16px !important;
+    max-width: 500px !important;
+    width: 100% !important;
+    box-shadow: 0 0 50px rgba(255, 215, 0, 0.5) !important;
+}
+
+.winner-badge {
+    font-size: 3.5rem !important;
+    margin-bottom: 16px !important;
+    animation: bounce 1s ease-in-out infinite !important;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.winner-title {
+    font-family: 'Teko', sans-serif !important;
+    font-size: 3rem !important;
+    font-weight: 700 !important;
+    color: #FFD700 !important;
+    margin-bottom: 12px !important;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.6) !important;
+}
+
+.winner-name {
+    font-family: 'Teko', sans-serif !important;
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+    color: #fff !important;
+    margin-bottom: 8px !important;
+}
+
+.winner-track-title {
+    font-size: 1rem !important;
+    color: #888 !important;
+    font-style: italic !important;
+    margin-bottom: 24px !important;
+}
+
+.winner-stats {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 40px !important;
+    margin-bottom: 24px !important;
+}
+
+.winner-stat {
+    text-align: center !important;
+}
+
+.stat-value {
+    display: block !important;
+    font-family: 'Teko', sans-serif !important;
+    font-size: 2.5rem !important;
+    font-weight: 700 !important;
+    color: var(--arena-primary) !important;
+}
+
+.stat-label {
+    font-size: 0.7rem !important;
+    color: #888 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+}
+
+.btn-next-battle {
+    padding: 14px 32px !important;
+    background: linear-gradient(135deg, var(--arena-primary), #9d4edd) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    color: #fff !important;
+    font-family: 'Teko', sans-serif !important;
+    font-size: 1.3rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 1px !important;
+    cursor: pointer !important;
+    transition: all 0.3s !important;
+}
+
+.btn-next-battle:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 30px rgba(123, 44, 191, 0.6) !important;
+}
+
+/* ============================================= */
+/* 🌳 BRACKET BUTTON - BOTTOM RIGHT             */
+/* ============================================= */
+.bracket-tree-toggle {
+    position: fixed !important;
+    bottom: 20px !important;
+    right: 20px !important;
+    z-index: 999 !important;
+    padding: 12px 20px !important;
+    background: linear-gradient(135deg, var(--arena-primary), #9d4edd) !important;
+    border: none !important;
+    border-radius: 50px !important;
+    box-shadow: 0 4px 20px rgba(123, 44, 191, 0.6) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    font-family: 'Teko', sans-serif !important;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    color: #fff !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+}
+
+.bracket-tree-toggle:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 6px 30px rgba(123, 44, 191, 0.8) !important;
+}
+
+.bracket-tree-toggle:active {
+    transform: translateY(-1px) !important;
+}
+
+.bracket-tree-toggle .icon {
+    font-size: 1.2rem;
+}
+
+/* Masquer pendant le vote pour ne pas distraire */
+.voting-phase .bracket-tree-toggle {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+/* ============================================= */
+/* 📱 RESPONSIVE - TABLET                        */
+/* ============================================= */
+@media (min-width: 640px) {
+    .fighter-avatar {
+        width: 100px !important;
+        height: 100px !important;
+    }
+    
+    .fighter-name {
+        font-size: 1.3rem !important;
+    }
+    
+    .vote-btn {
+        min-height: 100px !important;
+    }
+    
+    .vote-icon {
+        font-size: 3rem !important;
+    }
+}
+
+/* ============================================= */
+/* 💻 RESPONSIVE - DESKTOP                       */
+/* ============================================= */
+@media (min-width: 1024px) {
+    :root {
+        --arena-status-h: 50px;
+        --arena-fighter-h: 160px;
+    }
+    
+    .battle-status-bar {
+        padding: 0 32px !important;
+    }
+    
+    .status-timer {
+        font-size: 2rem !important;
+    }
+    
+    .status-phase {
+        font-size: 1.2rem !important;
+    }
+    
+    .arena-wrapper {
+        padding: var(--arena-gap) 32px !important;
+        gap: 24px !important;
+    }
+    
+    .fighter-avatar {
+        width: 120px !important;
+        height: 120px !important;
+    }
+    
+    .fighter-name {
+        font-size: 1.5rem !important;
+    }
+    
+    .battle-player,
+    .vote-section {
+        padding: 20px !important;
+    }
+    
+    .volume-slider {
+        max-width: 150px !important;
+    }
+}
+
+/* ============================================= */
+/* ⚡ PERFORMANCE - REDUCED MOTION               */
+/* ============================================= */
+@media (prefers-reduced-motion: reduce) {
+    .fighter-status.status-playing,
+    .winner-badge,
+    .vote-counts span.animating {
+        animation: none !important;
+    }
+    
+    .vote-bar-fill,
+    .progress-bar {
+        transition: none !important;
+    }
+}
+
+/* ============================================= */
+/* 🎨 ANIMATIONS                                 */
+/* ============================================= */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+/* ============================================= */
+/* 🔧 UTILITY CLASSES                            */
+/* ============================================= */
+.hidden {
+    display: none !important;
+}
+
+.voting-disabled .vote-btn {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+}
+
+/* ============================================= */
+/* 📱 MOBILE SPECIFIC (< 375px)                  */
+/* ============================================= */
+@media (max-width: 374px) {
+    .fighter-avatar {
+        width: 70px !important;
+        height: 70px !important;
+    }
+    
+    .fighter-name {
+        font-size: 1rem !important;
+    }
+    
+    .vs-badge {
+        font-size: 1.5rem !important;
+    }
+    
+    .vote-icon {
+        font-size: 2rem !important;
+    }
+    
+    .vote-label {
+        font-size: 0.85rem !important;
+    }
+    
+    .bracket-tree-toggle {
+        bottom: 12px !important;
+        right: 12px !important;
+        padding: 10px 16px !important;
+        font-size: 0.9rem !important;
+    }
+}
