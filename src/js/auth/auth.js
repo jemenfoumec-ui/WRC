@@ -131,14 +131,23 @@ export async function logout() {
 // AUTH MODAL
 // ==========================================
 let authModal = null;
+let pendingRole = 'fan';
 
-export function openAuthModal() {
+export function openAuthModal(role = 'fan') {
+    pendingRole = role;
     if (!authModal) {
         authModal = createAuthModal();
         document.body.appendChild(authModal);
     }
     
     authModal.classList.add('show');
+    
+    // Update modal title based on role
+    const titleEl = authModal.querySelector('.auth-modal-header h2');
+    if (titleEl) {
+        titleEl.textContent = role === 'artist' ? '🎤 DEVENIR ARTISTE' : '⚖️ REJOINDRE LE JURY';
+    }
+
     setTimeout(() => {
         authModal.querySelector('#authEmail')?.focus();
     }, 100);
@@ -286,7 +295,7 @@ async function handleAuthSubmit(e) {
             if (signInError.message.includes('Invalid login credentials') || 
                 signInError.message.includes('Invalid login')) {
                 
-                const role = isAdminEmail ? 'admin' : 'fan';
+                const role = isAdminEmail ? 'admin' : pendingRole;
                 const username = email.split('@')[0];
 
                 const { data: signUpData, error: signUpError } = await supabase.auth.signUp({

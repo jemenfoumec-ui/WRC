@@ -105,7 +105,7 @@ class JuryDashboard {
         if (this.isLoading || (!append && !this.hasMoreData && this.currentPage > 0)) return;
         
         this.isLoading = true;
-        const container = document.getElementById('tracksGrid');
+        const container = document.getElementById('artistsToVoteList');
         if (!container) return;
 
         if (!append) {
@@ -199,11 +199,10 @@ class JuryDashboard {
 
     updateStatsUI(stats) {
         const map = {
-            'statTracksToVote': stats.tracksToVote,
-            'statVotesGiven': stats.votesGiven,
-            'statAvgRating': stats.avgRating,
-            'sidebarVotesGiven': stats.votesGiven,
-            'sidebarTracksListened': stats.votesGiven
+            'artistsToVote': stats.tracksToVote,
+            'myVotes': stats.votesGiven,
+            'tracksListened': stats.votesGiven,
+            'timeRemaining': stats.daysRemaining || 7
         };
 
         for (const [id, value] of Object.entries(map)) {
@@ -310,7 +309,7 @@ class JuryDashboard {
             return;
         }
 
-        const container = document.getElementById('tracksGrid');
+        const container = document.getElementById('artistsToVoteList');
         const results = this.allTracksCache.filter(t => 
             t.title.toLowerCase().includes(query) || 
             t.artist.toLowerCase().includes(query)
