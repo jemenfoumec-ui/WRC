@@ -4,9 +4,11 @@
  */
 
 export { AdminApi, adminApi } from './AdminApi.js';
-export { AdminUI, adminUi } from './AdminUI.js';
+export { AdminUI, adminUI } from './AdminUI.js';
+export { AdminStats, adminStats } from './AdminStats.js';
 
 export default {
     api: AdminApi,
-    ui: AdminUI
+    ui: AdminUI,
+    stats: AdminStats
 };

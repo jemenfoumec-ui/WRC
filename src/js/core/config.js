@@ -9,8 +9,8 @@ const isProduction = window.location.hostname !== 'localhost' &&
 
 // Supabase Configuration
 export const supabaseConfig = {
-    url: import.meta.env.VITE_SUPABASE_URL || 'https://ycgasfujxycqmbmiedaw.supabase.co',
-    key: import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InljZ2FzZnVqeHljcW1ibWllZGF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1OTI2NTAsImV4cCI6MjA4MjE2ODY1MH0.n1-XIs2wqPF8lr4nkVSBsLm_ylW_J7NrqqTwz1z4ftQ'
+    url: import.meta.env.VITE_SUPABASE_URL,
+    key: import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_KEY
 };
 
 // Validate configuration

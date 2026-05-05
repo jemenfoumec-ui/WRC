@@ -3,22 +3,22 @@ import { VitePWA } from 'vite-plugin-pwa';
 import { resolve } from 'path';
 
 export default defineConfig({
-  root: '.',
-  publicDir: 'public',
+  root: 'src',
+  publicDir: '../public',
   build: {
-    outDir: 'dist',
+    outDir: '../dist',
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.html'),
-        dashboard: resolve(__dirname, 'dashboard.html'),
-        'dashboard-admin': resolve(__dirname, 'dashboard-admin.html'),
-        'dashboard-jury': resolve(__dirname, 'dashboard-jury.html'),
-        'tournament-arena': resolve(__dirname, 'tournament-arena.html'),
-        'tournament-registration': resolve(__dirname, 'tournament-registration.html'),
-        'profile-edit': resolve(__dirname, 'profile-edit.html'),
-        faq: resolve(__dirname, 'faq.html'),
-        protocol: resolve(__dirname, 'protocol.html'),
+        main: resolve(__dirname, 'src/index.html'),
+        dashboard: resolve(__dirname, 'src/dashboard.html'),
+        'dashboard-admin': resolve(__dirname, 'src/dashboard-admin.html'),
+        'dashboard-jury': resolve(__dirname, 'src/dashboard-jury.html'),
+        'tournament-arena': resolve(__dirname, 'src/tournament-arena.html'),
+        'tournament-registration': resolve(__dirname, 'src/tournament-registration.html'),
+        'profile-edit': resolve(__dirname, 'src/profile-edit.html'),
+        faq: resolve(__dirname, 'src/faq.html'),
+        protocol: resolve(__dirname, 'src/protocol.html'),
       },
     },
     sourcemap: true,
@@ -117,7 +117,4 @@ export default defineConfig({
       },
     }),
   ],
-  define: {
-    'import.meta.env.PROD': JSON.stringify(process.env.NODE_ENV === 'production'),
-  },
 });

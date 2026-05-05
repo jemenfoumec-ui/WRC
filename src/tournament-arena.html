@@ -25,11 +25,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Teko:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Styles -->
-    <link rel="stylesheet" href="/wrc-core.css">
-    <link rel="stylesheet" href="/wrc-layout.css">
-    <link rel="stylesheet" href="/wrc-components.css">
-    <link rel="stylesheet" href="/tournament-arena.css">
-    <link rel="stylesheet" href="/tournament-arena-mobile.css">
+    <link rel="stylesheet" href="/css/wrc-core.css">
+    <link rel="stylesheet" href="/css/wrc-layout.css">
+    <link rel="stylesheet" href="/css/wrc-components.css">
+    <link rel="stylesheet" href="/css/tournament-arena.css">
+    <link rel="stylesheet" href="/css/tournament-arena-mobile.css">
 </head>
 <body>
 
@@ -133,11 +133,11 @@
             </div>
             
             <div class="vote-buttons">
-                <button class="vote-btn vote-btn-a" id="btnA" disabled onclick="window.castVote('A')">
+                <button class="vote-btn vote-btn-a" id="btnA" disabled>
                     <span class="vote-btn-icon">🎵</span>
                     <span class="vote-btn-text">VOTER A</span>
                 </button>
-                <button class="vote-btn vote-btn-b" id="btnB" disabled onclick="window.castVote('B')">
+                <button class="vote-btn vote-btn-b" id="btnB" disabled>
                     <span class="vote-btn-icon">🎵</span>
                     <span class="vote-btn-text">VOTER B</span>
                 </button>
@@ -185,11 +185,9 @@
 <!-- Scripts - Modular Architecture -->
 <script type="module">
     // Core modules
-    import './src/js/auth/toast.js';
-    import './src/js/auth/auth.js';
-    import './src/js/components/nav.js';
-    import './src/js/arena/index.js';
-    import { logger } from './src/js/core/config.js';
+    import '/main.js';
+    import '/js/arena/index.js';
+    import { logger } from '/js/core/config.js';
 
     logger.info('Tournament Arena page loaded');
 </script>
