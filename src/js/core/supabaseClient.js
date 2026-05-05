@@ -77,55 +77,6 @@ class CacheManager {
 export const cacheManager = new CacheManager();
 
 // ==========================================
-// SMART CACHE WITH LRU
-// ==========================================
-class SmartCache {
-    constructor(maxSize = 200) {
-        this.cache = new Map();
-        this.hitCount = new Map();
-        this.maxSize = maxSize;
-        this.baseTTL = 30000;
-    }
-    
-    set(key, value) {
-        if (this.cache.size >= this.maxSize) {
-            const leastUsed = [...this.hitCount.entries()]
-                .sort((a, b) => a[1] - b[1])[0];
-            if (leastUsed) {
-                this.cache.delete(leastUsed[0]);
-                this.hitCount.delete(leastUsed[0]);
-            }
-        }
-        
-        this.cache.set(key, {
-            value,
-            timestamp: Date.now(),
-            ttl: this.calculateTTL(key)
-        });
-    }
-    
-    get(key) {
-        const entry = this.cache.get(key);
-        if (!entry) return null;
-        
-        if (Date.now() - entry.timestamp > entry.ttl) {
-            this.cache.delete(key);
-            return null;
-        }
-        
-        this.hitCount.set(key, (this.hitCount.get(key) || 0) + 1);
-        return entry.value;
-    }
-    
-    calculateTTL(key) {
-        const hits = this.hitCount.get(key) || 0;
-        return this.baseTTL + (hits * 5000);
-    }
-}
-
-export const smartCache = new SmartCache();
-
-// ==========================================
 // CACHED DATA FETCHER
 // ==========================================
 export async function getCachedData(key, fetchFunction, ttl) {
@@ -144,10 +95,8 @@ export async function getCachedData(key, fetchFunction, ttl) {
 export function clearCache(key = null) {
     if (key) {
         cacheManager.delete(key);
-        smartCache.cache.delete(key);
     } else {
         cacheManager.clear();
-        smartCache.cache.clear();
     }
     logger.debug(`Cache cleared: ${key || 'all'}`);
 }

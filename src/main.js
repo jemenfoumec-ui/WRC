@@ -3,6 +3,9 @@
  * Initializes all core modules and sets up the application
  */
 
+// PWA Support
+import { registerSW } from 'virtual:pwa-register';
+
 // Core modules
 import './js/auth/toast.js';
 import './js/auth/auth.js';
@@ -10,6 +13,16 @@ import './js/components/nav.js';
 
 import { logger, appConfig } from './js/core/config.js';
 import { supabase } from './js/core/supabaseClient.js';
+
+// Register Service Worker
+registerSW({
+    onNeedRefresh() {
+        logger.info('Nouvelle version disponible');
+    },
+    onOfflineReady() {
+        logger.info('App prête pour le mode hors-ligne');
+    },
+});
 
 // ==========================================
 // APP INITIALIZATION
