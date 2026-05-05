@@ -4,7 +4,7 @@
  */
 
 export { supabaseConfig, appConfig, cacheConfig, rateLimits, protectedPages, adminEmails, storageKeys, logger } from './config.js';
-export { supabase, cacheManager, smartCache, getCachedData, clearCache, fetchTracks, fetchLeaderboard, uploadTrack, deleteTrack, voteForTrackRPC, batchFetch, debounce, throttle } from './supabaseClient.js';
+export { supabase, cacheManager, getCachedData, clearCache, fetchTracks, fetchLeaderboard, uploadTrack, deleteTrack, voteForTrackRPC, batchFetch, debounce, throttle } from './supabaseClient.js';
 
 export default {
     config: {
@@ -19,7 +19,6 @@ export default {
     },
     supabase,
     cacheManager,
-    smartCache,
     api: {
         fetchTracks,
         fetchLeaderboard,
