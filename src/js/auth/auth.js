@@ -4,7 +4,7 @@
  */
 
 import { supabase } from '../core/supabaseClient.js';
-import { protectedPages, adminEmails, storageKeys, logger } from '../core/config.js';
+import { protectedPages, storageKeys, logger } from '../core/config.js';
 import { showToast } from './toast.js';
 
 // ==========================================
@@ -247,8 +247,6 @@ async function handleAuthSubmit(e) {
     }
 
     try {
-        const isAdminEmail = adminEmails.includes(email.toLowerCase());
-        
         // Try sign in
         const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
             email,
@@ -264,15 +262,9 @@ async function handleAuthSubmit(e) {
                 .eq('id', signInData.user.id)
                 .single();
 
-            let role = profile?.role || 'fan';
-            
-            if (isAdminEmail && role !== 'admin') {
-                role = 'admin';
-                await supabase
-                    .from('profiles')
-                    .update({ role: 'admin', is_admin: true })
-                    .eq('id', signInData.user.id);
-            }
+            // SECURITY FIX: Removed client-side role escalation
+            // Role must be set server-side via Supabase RLS or database triggers
+            const role = profile?.role || 'fan';
 
             const userData = {
                 id: signInData.user.id,
@@ -306,7 +298,9 @@ async function handleAuthSubmit(e) {
             if (signInError.message.includes('Invalid login credentials') || 
                 signInError.message.includes('Invalid login')) {
                 
-                const role = isAdminEmail ? 'admin' : pendingRole;
+                // SECURITY FIX: Removed client-side admin role assignment
+                // Admin roles must be assigned server-side
+                const role = pendingRole;
                 const username = email.split('@')[0];
 
                 const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
@@ -329,16 +323,14 @@ async function handleAuthSubmit(e) {
                         id: signUpData.user.id,
                         email,
                         username,
-                        role,
-                        is_admin: role === 'admin'
+                        role
                     });
 
                     const userData = {
                         id: signUpData.user.id,
                         email,
                         role,
-                        username,
-                        is_admin: role === 'admin'
+                        username
                     };
 
                     saveUser(userData, true);

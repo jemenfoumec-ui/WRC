@@ -4,7 +4,7 @@ import { logger } from './config.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export function initAnimations(globe) {
+export function initAnimations(_globe) {
     // Hero Text Animation
     const heroTitle = document.querySelector('.hero-content h1, .wrc-hero-title');
     const heroSubtitle = document.querySelector('.hero-content p, .wrc-hero-subtitle');
@@ -40,18 +40,21 @@ export function initAnimations(globe) {
         });
     }
 
-    // Scroll-Linked 3D Globe
-    ScrollTrigger.create({
-        trigger: 'body',
-        start: 'top top',
-        end: 'bottom bottom',
-        scrub: 1,
-        onUpdate: (self) => {
-            if (globe && typeof globe.updateCameraOnScroll === 'function') {
-                globe.updateCameraOnScroll(self.progress);
-            }
-        }
-    });
+    // Note: Globe rotation is fixed, not scroll-linked
+    // Removed scroll-linked camera updates to keep globe as fixed background
+    
+    // // Scroll-Linked 3D Globe (DEPRECATED - now fixed)
+    // ScrollTrigger.create({
+    //     trigger: 'body',
+    //     start: 'top top',
+    //     end: 'bottom bottom',
+    //     scrub: 1,
+    //     onUpdate: (self) => {
+    //         if (globe && typeof globe.updateCameraOnScroll === 'function') {
+    //             globe.updateCameraOnScroll(self.progress);
+    //         }
+    //     }
+    // });
 
     // Stagger Reveals for sections
     const staggerSections = document.querySelectorAll('.stagger-reveal, .stagger');
