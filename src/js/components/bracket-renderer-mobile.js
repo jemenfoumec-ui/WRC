@@ -2,7 +2,7 @@
 // BRACKET TREE RENDERER - VERSION MOBILE-FIRST
 // Optimisé tactile + Performance améliorée
 // ==========================================
-import { supabase } from './supabaseClient.js';
+import { supabase } from '../core/supabaseClient.js';
 
 class BracketTreeRenderer {
     constructor() {

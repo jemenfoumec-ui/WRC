@@ -3,7 +3,7 @@
 // Support 1000+ utilisateurs simultanés
 // Virtual Scrolling + Canvas Rendering + Premium UX
 // ==========================================
-import { supabase } from './supabaseClient.js';
+import { supabase } from '../core/supabaseClient.js';
 
 class BracketTreeOptimized {
     constructor() {
