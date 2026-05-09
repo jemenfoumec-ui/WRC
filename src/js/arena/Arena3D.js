@@ -4,6 +4,7 @@ import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer
 /**
  * WRC 2026 - 3D Earth Globe with City Markers
  * Arena/Grunt aesthetic - fixed rotating globe with artist hotspots
+ * Features world map texture, floating city labels with Teko font
  */
 export class Arena3D {
     constructor(canvasId) {
@@ -33,7 +34,7 @@ export class Arena3D {
 
         this.mouse = new THREE.Vector2();
         this.targetRotation = new THREE.Vector2();
-        this.autoRotateSpeed = 0.0005; // Slower, more dramatic rotation
+        this.autoRotateSpeed = 0.0005;
         
         // Globe settings
         this.globeRadius = 5;
@@ -96,6 +97,9 @@ export class Arena3D {
         this.innerGlobe = new THREE.Mesh(innerGlowGeometry, innerGlowMaterial);
         this.scene.add(this.innerGlobe);
 
+        // World map texture on sphere
+        this.createWorldMapTexture();
+
         // Outer atmosphere glow with purple tint
         const atmosphereGeometry = new THREE.SphereGeometry(this.globeRadius * 1.015, 32, 32);
         const atmosphereMaterial = new THREE.ShaderMaterial({
@@ -132,6 +136,132 @@ export class Arena3D {
         this.globeGroup.add(this.innerGlobe);
         this.globeGroup.add(this.atmosphere);
         this.scene.add(this.globeGroup);
+    }
+
+    createWorldMapTexture() {
+        // Create world map texture using canvas
+        const canvas = document.createElement('canvas');
+        canvas.width = 2048;
+        canvas.height = 1024;
+        const ctx = canvas.getContext('2d');
+        
+        // Dark background
+        ctx.fillStyle = '#0a0a12';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw simplified world map outline
+        ctx.strokeStyle = 'rgba(139, 92, 246, 0.25)';
+        ctx.lineWidth = 1;
+        
+        // Draw grid lines
+        for (let i = 0; i <= canvas.width; i += 64) {
+            ctx.beginPath();
+            ctx.moveTo(i, 0);
+            ctx.lineTo(i, canvas.height);
+            ctx.stroke();
+        }
+        for (let i = 0; i <= canvas.height; i += 64) {
+            ctx.beginPath();
+            ctx.moveTo(0, i);
+            ctx.lineTo(canvas.width, i);
+            ctx.stroke();
+        }
+        
+        // Draw continent shapes (simplified paths)
+        ctx.fillStyle = 'rgba(139, 92, 246, 0.08)';
+        ctx.strokeStyle = 'rgba(139, 92, 246, 0.3)';
+        ctx.lineWidth = 1;
+        
+        // North America
+        ctx.beginPath();
+        ctx.moveTo(150, 180);
+        ctx.lineTo(350, 150);
+        ctx.lineTo(400, 200);
+        ctx.lineTo(380, 350);
+        ctx.lineTo(300, 450);
+        ctx.lineTo(180, 400);
+        ctx.lineTo(120, 280);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        
+        // South America
+        ctx.beginPath();
+        ctx.moveTo(350, 450);
+        ctx.lineTo(420, 480);
+        ctx.lineTo(400, 650);
+        ctx.lineTo(320, 800);
+        ctx.lineTo(280, 700);
+        ctx.lineTo(300, 500);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        
+        // Europe
+        ctx.beginPath();
+        ctx.moveTo(850, 180);
+        ctx.lineTo(1050, 150);
+        ctx.lineTo(1100, 200);
+        ctx.lineTo(1000, 280);
+        ctx.lineTo(880, 300);
+        ctx.lineTo(820, 250);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        
+        // Africa
+        ctx.beginPath();
+        ctx.moveTo(880, 320);
+        ctx.lineTo(1050, 300);
+        ctx.lineTo(1100, 400);
+        ctx.lineTo(1080, 550);
+        ctx.lineTo(1000, 650);
+        ctx.lineTo(900, 600);
+        ctx.lineTo(850, 450);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        
+        // Asia
+        ctx.beginPath();
+        ctx.moveTo(1100, 150);
+        ctx.lineTo(1500, 120);
+        ctx.lineTo(1700, 200);
+        ctx.lineTo(1650, 350);
+        ctx.lineTo(1400, 400);
+        ctx.lineTo(1200, 350);
+        ctx.lineTo(1100, 280);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        
+        // Australia
+        ctx.beginPath();
+        ctx.moveTo(1550, 550);
+        ctx.lineTo(1750, 520);
+        ctx.lineTo(1800, 620);
+        ctx.lineTo(1700, 720);
+        ctx.lineTo(1550, 680);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        
+        // Create texture
+        const texture = new THREE.CanvasTexture(canvas);
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.ClampToEdgeWrapping;
+        
+        // Apply texture to a sphere slightly smaller than wireframe
+        const mapGeometry = new THREE.SphereGeometry(this.globeRadius * 0.99, 64, 64);
+        const mapMaterial = new THREE.MeshBasicMaterial({
+            map: texture,
+            transparent: true,
+            opacity: 0.6,
+            side: THREE.FrontSide
+        });
+        
+        this.worldMap = new THREE.Mesh(mapGeometry, mapMaterial);
+        this.globeGroup.add(this.worldMap);
     }
 
     createGridLines() {
@@ -281,12 +411,13 @@ export class Arena3D {
             this.globeGroup.add(sprite);
             this.hotspots.push(sprite);
 
-            // Create HTML label
+            // Create HTML label with Teko font and blur effect on artist count
             const labelDiv = document.createElement('div');
             labelDiv.className = 'globe-label';
             labelDiv.innerHTML = `
                 <div class="globe-label-city">${cityData.city}</div>
-                <div class="globe-label-count">${this.formatArtistCount(cityData.artists)}</div>
+                <div class="globe-label-country">${cityData.flag} ${cityData.country}</div>
+                <div class="globe-label-count" style="filter: blur(4px);">${this.formatArtistCount(cityData.artists)} ARTISTS</div>
             `;
             
             const label = new CSS2DObject(labelDiv);

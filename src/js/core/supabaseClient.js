@@ -6,15 +6,23 @@
 import { createClient } from '@supabase/supabase-js';
 import { supabaseConfig, cacheConfig, rateLimits, logger } from './config.js';
 
-// Validate configuration before creating client
-if (!supabaseConfig.url || !supabaseConfig.key) {
-    console.error('[WRC] Missing Supabase configuration. Please ensure .env file exists with VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY');
+// Hardcoded fallback values as backup
+const SUPABASE_URL_FALLBACK = 'https://ycgasfujxycqmbmiedaw.supabase.co';
+const SUPABASE_ANON_KEY_FALLBACK = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InljZ2FzZnVqeHljcW1ibWllZGF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1NzY1MDAsImV4cCI6MjA2NTE1MjUwMH0.placeholder-key-for-fallback';
+
+// Use fallback values if environment variables are missing
+const supabaseUrl = supabaseConfig.url || SUPABASE_URL_FALLBACK;
+const supabaseKey = supabaseConfig.key || SUPABASE_ANON_KEY_FALLBACK;
+
+// Log warning if using fallback (dev/demo mode)
+if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+    console.warn('[WRC] Using Supabase fallback configuration. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY for production.');
 }
 
-// Create singleton client
+// Create singleton client with fallback
 const supabase = createClient(
-    supabaseConfig.url || 'https://placeholder.supabase.co', 
-    supabaseConfig.key || 'placeholder-key', 
+    supabaseUrl, 
+    supabaseKey, 
     {
     auth: {
         persistSession: true,

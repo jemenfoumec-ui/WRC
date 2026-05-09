@@ -13,6 +13,12 @@
   "scope": "/",
   "icons": [
     {
+      "src": "/pwa-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
       "src": "/pwa-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
@@ -25,26 +31,10 @@
       "purpose": "any"
     },
     {
-      "src": "/pwa-maskable-512x512.png",
+      "src": "/pwa-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/screenshots/home.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "WRC 2026 Home"
-    },
-    {
-      "src": "/screenshots/arena.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Tournament Arena"
     }
   ],
   "shortcuts": [
@@ -52,15 +42,13 @@
       "name": "Tournament Arena",
       "short_name": "Arena",
       "description": "Watch live battles",
-      "url": "/tournament-arena.html",
-      "icons": [{ "src": "/icons/arena-96x96.png", "sizes": "96x96" }]
+      "url": "/tournament-arena.html"
     },
     {
       "name": "Register",
       "short_name": "Register",
       "description": "Register as an artist",
-      "url": "/tournament-registration.html",
-      "icons": [{ "src": "/icons/register-96x96.png", "sizes": "96x96" }]
+      "url": "/tournament-registration.html"
     }
   ],
   "related_applications": [],
