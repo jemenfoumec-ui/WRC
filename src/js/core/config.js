@@ -9,17 +9,15 @@ const isProduction = window.location.hostname !== 'localhost' &&
 
 // Supabase Configuration
 export const supabaseConfig = {
-    url: import.meta.env.VITE_SUPABASE_URL,
-    key: import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_KEY
+    url: import.meta.env.VITE_SUPABASE_URL || '',
+    key: import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_KEY || ''
 };
 
-// Validate configuration
+// Warn if configuration is missing (but don't throw - allow graceful fallback)
 if (!supabaseConfig.url || !supabaseConfig.key) {
-    throw new Error('Configuration Supabase manquante');
-}
-
-if (!supabaseConfig.key.startsWith('eyJ')) {
-    console.warn('ALERTE: Clé Supabase potentiellement invalide');
+    console.warn('[WRC] Supabase configuration incomplete. Ensure .env file exists.');
+} else if (!supabaseConfig.key.startsWith('eyJ')) {
+    console.warn('[WRC] Supabase key format appears invalid');
 }
 
 // App Configuration

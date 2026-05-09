@@ -76,17 +76,28 @@ export function getAuthState() {
 // ==========================================
 function getCurrentPage() {
     const path = window.location.pathname;
-    return path.split('/').pop() || 'index.html';
+    // Handle both /dashboard-admin and /dashboard-admin.html
+    let page = path.split('/').pop() || 'index.html';
+    // Strip .html extension if present
+    if (page.endsWith('.html')) {
+        page = page.slice(0, -5);
+    }
+    return page;
 }
 
 function isProtectedPage() {
     const page = getCurrentPage();
-    return protectedPages.some(p => page.includes(p));
+    // Check for full page names with .html extension or base names
+    return protectedPages.some(p => 
+        page.includes(p) || 
+        page.includes(p.replace('.html', '')) ||
+        p.replace('.html', '') === page
+    );
 }
 
 function isAdminPage() {
     const page = getCurrentPage();
-    return page.includes('dashboard-admin');
+    return page.includes('dashboard-admin') || page.includes('dashboard-admin.html');
 }
 
 export function checkPageAccess() {
