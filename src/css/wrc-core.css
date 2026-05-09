@@ -256,10 +256,14 @@ body {
     font-weight: var(--weight-normal);
     line-height: var(--leading-normal);
     color: var(--text-primary);
-    background: var(--bg-deep);
+    background: transparent;
     min-height: 100vh;
     min-height: 100dvh;
     overflow-x: hidden;
+}
+
+html {
+    background: var(--bg-void);
 }
 
 /* Selection */
@@ -308,11 +312,21 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    font-weight: var(--weight-bold);
+    font-weight: 900;
     line-height: var(--leading-tight);
-    letter-spacing: var(--tracking-wide);
+    letter-spacing: -0.02em;
     text-transform: uppercase;
     color: var(--text-primary);
+}
+
+/* Noise Overlay */
+.noise-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-max);
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
 h1 { font-size: var(--text-6xl); }

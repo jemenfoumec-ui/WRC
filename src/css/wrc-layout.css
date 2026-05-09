@@ -11,8 +11,15 @@
     display: flex;
     min-height: 100vh;
     min-height: 100dvh;
-    background: var(--bg-deep);
+    background: transparent;
     position: relative;
+}
+
+#arena-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
 }
 
 /* Background Ambiance */
