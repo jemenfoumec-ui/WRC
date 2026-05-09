@@ -1,68 +1,85 @@
-import gsap from 'gsap';
+import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export function initAnimations(arena3D) {
-    // Hero Reveal
-    const heroTitle = document.querySelector('.wrc-hero-title');
+export function initAnimations(arena) {
+    // Hero Text Animation
+    const heroTitle = document.querySelector('.hero-content h1');
+    const heroSubtitle = document.querySelector('.hero-content p');
+    const heroCTA = document.querySelector('.hero-content .cta-group');
+
     if (heroTitle) {
-        // Heavy, staggered "Grunt-style" impact
         gsap.from(heroTitle, {
-            scale: 0.8,
+            y: 100,
             opacity: 0,
-            duration: 1.5,
-            ease: 'back.out(1.7)',
-            letterSpacing: '0.2em',
-            clearProps: 'all'
+            duration: 1.2,
+            ease: "power4.out",
+            delay: 0.5
         });
     }
 
-    // Scroll-Linked 3D
+    if (heroSubtitle) {
+        gsap.from(heroSubtitle, {
+            y: 50,
+            opacity: 0,
+            duration: 1,
+            ease: "power3.out",
+            delay: 0.8
+        });
+    }
+
+    if (heroCTA) {
+        gsap.from(heroCTA, {
+            y: 30,
+            opacity: 0,
+            duration: 0.8,
+            ease: "power2.out",
+            delay: 1.1
+        });
+    }
+
+    // Scroll-Linked 3D Arena
     ScrollTrigger.create({
         trigger: 'body',
         start: 'top top',
         end: 'bottom bottom',
         scrub: 1,
         onUpdate: (self) => {
-            if (arena3D) {
-                arena3D.updateOnScroll(self.progress);
+            if (arena && typeof arena.updateCameraOnScroll === 'function') {
+                arena.updateCameraOnScroll(self.progress);
             }
         }
     });
 
-    // Staggered reveals for elements with .stagger class
-    const staggerContainers = document.querySelectorAll('.stagger');
-    staggerContainers.forEach((container) => {
-        const children = container.children;
-        if (children.length > 0) {
-            gsap.from(children, {
-                scrollTrigger: {
-                    trigger: container,
-                    start: 'top 85%',
-                },
-                y: 50,
-                opacity: 0,
-                duration: 1,
-                ease: 'power3.out',
-                stagger: 0.15
-            });
-        }
-    });
-
-    // Individual sections fade in
-    const sections = document.querySelectorAll('.wrc-section');
-    sections.forEach(section => {
-        gsap.from(section, {
+    // Stagger Reveals for sections
+    const staggerSections = document.querySelectorAll('.stagger-reveal');
+    staggerSections.forEach(section => {
+        gsap.from(section.children, {
             scrollTrigger: {
                 trigger: section,
-                start: 'top 90%',
-                toggleActions: 'play none none none'
+                start: 'top 80%',
+                toggleActions: 'play none none reverse'
             },
+            y: 60,
             opacity: 0,
-            y: 30,
-            duration: 1,
+            duration: 0.8,
+            stagger: 0.2,
             ease: 'power2.out'
+        });
+    });
+
+    // Industrial typography effects
+    const punchyText = document.querySelectorAll('.punchy-text');
+    punchyText.forEach(text => {
+        gsap.to(text, {
+            scrollTrigger: {
+                trigger: text,
+                start: 'top 90%',
+                scrub: true
+            },
+            letterSpacing: '0em',
+            ease: 'none'
         });
     });
 }

@@ -1,10 +1,12 @@
 import * as THREE from 'three';
-import gsap from 'gsap';
 
 export class Arena3D {
     constructor(canvasId) {
         this.canvas = document.getElementById(canvasId);
-        if (!this.canvas) return;
+        if (!this.canvas) {
+            console.warn(`Canvas with id ${canvasId} not found`);
+            return;
+        }
 
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -14,83 +16,91 @@ export class Arena3D {
             alpha: true
         });
 
+        this.mouse = new THREE.Vector2();
+        this.targetRotation = new THREE.Vector2();
+        
+        this.init();
+    }
+
+    init() {
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.renderer.setClearColor(0x050505, 1);
 
-        this.scrollProgress = 0;
-        this.mouse = { x: 0, y: 0 };
-        this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        this.camera.position.z = 5;
 
-        this.initScene();
-        this.addEventListeners();
+        this.createArena();
+        this.addLights();
+        this.addParticles();
+        this.setupEvents();
         this.animate();
     }
 
-    initScene() {
-        // Arena Geometry (Industrial Cage) - Brutalist style
-        const cageGroup = new THREE.Group();
+    createArena() {
+        // Brutalist "Cage" structure
+        const group = new THREE.Group();
         
-        const geometry = new THREE.CylinderGeometry(15, 15, 60, 6, 20, true);
-        const material = new THREE.MeshBasicMaterial({
-            color: 0x444444,
+        const material = new THREE.MeshStandardMaterial({
+            color: 0x222222,
             wireframe: true,
             transparent: true,
-            opacity: 0.1,
-            side: THREE.DoubleSide
+            opacity: 0.2
         });
-        this.cage = new THREE.Mesh(geometry, material);
-        cageGroup.add(this.cage);
 
-        // Add some structural beams
-        for (let i = 0; i < 6; i++) {
-            const beamGeom = new THREE.BoxGeometry(0.5, 60, 0.5);
-            const beamMat = new THREE.MeshBasicMaterial({ color: 0x222222 });
-            const beam = new THREE.Mesh(beamGeom, beamMat);
-            const angle = (i / 6) * Math.PI * 2;
-            beam.position.x = Math.cos(angle) * 15;
-            beam.position.z = Math.sin(angle) * 15;
-            cageGroup.add(beam);
+        const outerBoxGeometry = new THREE.BoxGeometry(20, 20, 40);
+        const outerBox = new THREE.Mesh(outerBoxGeometry, material);
+        group.add(outerBox);
+
+        // Add some industrial beams
+        const beamGeo = new THREE.BoxGeometry(0.2, 0.2, 40);
+        const beamMat = new THREE.MeshStandardMaterial({ color: 0x333333 });
+        
+        for (let i = 0; i < 4; i++) {
+            const beam = new THREE.Mesh(beamGeo, beamMat);
+            beam.position.x = (i < 2 ? -1 : 1) * 9.8;
+            beam.position.y = (i % 2 === 0 ? -1 : 1) * 9.8;
+            group.add(beam);
         }
 
-        this.scene.add(cageGroup);
-        this.cageGroup = cageGroup;
-
-        // Dust particles
-        this.particles = this.createParticles();
-        this.scene.add(this.particles);
-
-        this.camera.position.z = 25;
-        this.camera.position.y = 5;
+        this.arenaGroup = group;
+        this.scene.add(group);
     }
 
-    createParticles() {
-        const count = 3000;
-        const geometry = new THREE.BufferGeometry();
-        const positions = new Float32Array(count * 3);
-        const velocities = new Float32Array(count);
+    addLights() {
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        this.scene.add(ambientLight);
 
-        for (let i = 0; i < count; i++) {
-            positions[i * 3] = (Math.random() - 0.5) * 80;
-            positions[i * 3 + 1] = (Math.random() - 0.5) * 80;
-            positions[i * 3 + 2] = (Math.random() - 0.5) * 80;
-            velocities[i] = Math.random() * 0.02;
+        const pointLight = new THREE.PointLight(0xff0000, 2, 50);
+        pointLight.position.set(5, 5, 5);
+        this.scene.add(pointLight);
+
+        const spotLight = new THREE.SpotLight(0x00ff00, 2);
+        spotLight.position.set(-5, 10, 0);
+        this.scene.add(spotLight);
+    }
+
+    addParticles() {
+        const geometry = new THREE.BufferGeometry();
+        const count = 2000;
+        const positions = new Float32Array(count * 3);
+
+        for (let i = 0; i < count * 3; i++) {
+            positions[i] = (Math.random() - 0.5) * 40;
         }
 
         geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        this.particleVelocities = velocities;
-
         const material = new THREE.PointsMaterial({
-            size: 0.04,
-            color: 0x8b5cf6, // Primary color theme
+            size: 0.02,
+            color: 0xaaaaaa,
             transparent: true,
-            opacity: 0.4,
-            blending: THREE.AdditiveBlending
+            opacity: 0.5
         });
 
-        return new THREE.Points(geometry, material);
+        this.particles = new THREE.Points(geometry, material);
+        this.scene.add(this.particles);
     }
 
-    addEventListeners() {
+    setupEvents() {
         window.addEventListener('resize', () => {
             this.camera.aspect = window.innerWidth / window.innerHeight;
             this.camera.updateProjectionMatrix();
@@ -103,55 +113,29 @@ export class Arena3D {
         });
     }
 
-    updateOnScroll(progress) {
-        this.scrollProgress = progress;
-        
-        // Animate camera and scene based on scroll
-        gsap.to(this.cageGroup.rotation, {
-            y: progress * Math.PI * 2,
-            duration: 1,
-            ease: 'power2.out'
-        });
-
-        gsap.to(this.camera.position, {
-            z: 25 - (progress * 15),
-            y: 5 - (progress * 10),
-            duration: 1.5,
-            ease: 'power2.out'
-        });
-    }
-
     animate() {
-        requestAnimationFrame(this.animate.bind(this));
+        requestAnimationFrame(() => this.animate());
 
-        if (this.reducedMotion) {
-            this.renderer.render(this.scene, this.camera);
-            return;
-        }
+        // Smooth rotation based on mouse
+        this.targetRotation.x += (this.mouse.y * 0.1 - this.targetRotation.x) * 0.05;
+        this.targetRotation.y += (this.mouse.x * 0.1 - this.targetRotation.y) * 0.05;
 
-        const time = Date.now() * 0.001;
+        this.arenaGroup.rotation.x = this.targetRotation.x;
+        this.arenaGroup.rotation.y = this.targetRotation.y;
 
-        // Subtle rotation
-        if (this.cageGroup) {
-            this.cageGroup.rotation.x = Math.sin(time * 0.2) * 0.05;
-        }
-
-        // Mouse interaction
-        this.camera.position.x += (this.mouse.x * 5 - this.camera.position.x) * 0.05;
-        this.camera.position.y += (-this.mouse.y * 5 + 5 - this.camera.position.y) * 0.05;
-        this.camera.lookAt(0, 0, 0);
-
-        // Particle animation
-        if (this.particles) {
-            const positions = this.particles.geometry.attributes.position.array;
-            for (let i = 0; i < positions.length / 3; i++) {
-                positions[i * 3 + 1] -= this.particleVelocities[i] + (this.scrollProgress * 0.1);
-                if (positions[i * 3 + 1] < -40) positions[i * 3 + 1] = 40;
-            }
-            this.particles.geometry.attributes.position.needsUpdate = true;
-            this.particles.rotation.y += 0.001;
-        }
+        // Slow drift for particles
+        this.particles.rotation.y += 0.0005;
+        
+        // Scroll link - will be updated by GSAP
+        // this.camera.position.z = 5 + window.scrollY * 0.01;
 
         this.renderer.render(this.scene, this.camera);
+    }
+
+    updateCameraOnScroll(progress) {
+        // Map scroll progress (0 to 1) to camera movement
+        this.camera.position.z = 5 - progress * 10;
+        this.camera.rotation.z = progress * Math.PI;
+        this.arenaGroup.position.z = progress * 20;
     }
 }
