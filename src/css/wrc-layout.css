@@ -18,20 +18,8 @@
 #arena-canvas {
     position: fixed;
     inset: 0;
-    z-index: -2;
+    z-index: -1;
     pointer-events: none;
-}
-
-/* Background Ambiance */
-.wrc-app::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: 
-        radial-gradient(ellipse 120% 80% at 0% 0%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
-        radial-gradient(ellipse 80% 60% at 100% 100%, rgba(34, 211, 238, 0.04) 0%, transparent 40%);
-    pointer-events: none;
-    z-index: 0;
 }
 
 /* ============================================= */
@@ -44,10 +32,8 @@
     top: 0;
     bottom: 0;
     width: var(--sidebar-collapsed);
-    background: var(--glass-solid);
-    backdrop-filter: blur(var(--blur-xl));
-    -webkit-backdrop-filter: blur(var(--blur-xl));
-    border-right: 1px solid var(--border-light);
+    background: #000;
+    border-right: 1px solid var(--border-medium);
     z-index: var(--z-sticky);
     display: flex;
     flex-direction: column;
