@@ -16,7 +16,7 @@ import { supabase } from './js/core/supabaseClient.js';
 
 // Premium Experience Modules
 import { scroller } from './js/core/scroller.js';
-import { Globe3D } from './js/arena/Globe3D.js';
+import { Arena3D } from './js/arena/Arena3D.js';
 import { initAnimations } from './js/core/animations.js';
 
 // Register Service Worker
@@ -35,11 +35,11 @@ registerSW({
 async function initApp() {
     logger.info(`WRC 2026 v${appConfig.version} starting...`);
     
-    // Initialize 3D Globe
-    const globe = new Globe3D('arena-canvas');
+    // Initialize 3D Globe (fixed rotating Earth)
+    const globe = new Arena3D('arena-canvas');
     
-    // Load artist distribution data
-    globe.loadArtistDistribution(supabase);
+    // Load artist distribution data (optional enhancement)
+    // globe.loadArtistDistribution(supabase); // Not needed - uses embedded city data
     
     // Initialize Animations
     initAnimations(globe);
