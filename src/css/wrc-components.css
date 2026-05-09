@@ -1,7 +1,20 @@
 /* ============================================= */
 /* 🧩 WRC 2026 - COMPONENTS SYSTEM              */
 /* Glassmorphism + Modern UI Components         */
+/* GRUNT/ARENA UNIFIED AESTHETIC                 */
 /* ============================================= */
+
+/* ═══════════════════════════════════════════ */
+/* ARENA BRAND TOKENS                           */
+/* ═══════════════════════════════════════════ */
+
+:root {
+    /* Additional Arena-specific variables */
+    --arena-border: 2px solid rgba(139, 92, 246, 0.3);
+    --arena-border-active: 2px solid var(--primary);
+    --arena-radius: 0;
+    --arena-transition: all 200ms var(--ease-out);
+}
 
 /* ============================================= */
 /* 🃏 GLASS CARDS                               */
@@ -13,13 +26,47 @@
     border-radius: 0;
     padding: var(--space-6);
     transition: all 280ms var(--ease-out);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Corner accents */
+.glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 24px;
+    height: 24px;
+    border-top: 2px solid var(--primary);
+    border-left: 2px solid var(--primary);
+    opacity: 0.5;
+    transition: opacity 280ms var(--ease-out);
+}
+
+.glass-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 24px;
+    height: 24px;
+    border-bottom: 2px solid var(--primary);
+    border-right: 2px solid var(--primary);
+    opacity: 0.5;
+    transition: opacity 280ms var(--ease-out);
 }
 
 .glass-card:hover {
     background: var(--glass-light);
-    border-color: var(--border-medium);
+    border-color: var(--primary-600);
     transform: translateY(-3px);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--arena-glow);
+}
+
+.glass-card:hover::before,
+.glass-card:hover::after {
+    opacity: 1;
 }
 
 /* Card Variants */
@@ -120,12 +167,13 @@
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-700) 100%);
     border-color: transparent;
     color: white;
-    box-shadow: var(--glow-sm);
+    box-shadow: var(--arena-glow);
 }
 
 .btn-primary:hover {
     background: linear-gradient(135deg, var(--primary-400) 0%, var(--primary) 100%);
-    box-shadow: var(--glow-md);
+    box-shadow: var(--glow-lg);
+    border-color: var(--primary-400);
 }
 
 /* Outline Button */
