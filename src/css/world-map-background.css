@@ -1,9 +1,9 @@
 /* ============================================= */
-/* WORLD MAP BACKGROUND - VERSION AMÉLIORÉE     */
-/* Carte vectorielle minimaliste avec continents */
+/* WORLD MAP BACKGROUND - 3D GLOBE INTEGRATION   */
+/* Transition from 2D map to 3D Globe           */
 /* ============================================= */
 
-/* Container principal */
+/* Container principal - Updated for 3D Globe */
 .world-map-bg {
     position: fixed;
     top: 0;
@@ -11,14 +11,28 @@
     width: 100%;
     height: 100%;
     z-index: -2;
-    background: 
-        radial-gradient(circle at 20% 30%, rgba(123, 44, 191, 0.04) 0%, transparent 60%),
-        radial-gradient(circle at 80% 70%, rgba(157, 78, 221, 0.03) 0%, transparent 60%),
-        linear-gradient(180deg, #0a0510 0%, #050208 100%);
+    background: var(--bg-void);
     overflow: hidden;
 }
 
-/* Overlay de contraste pour le contenu */
+/* 3D Globe Canvas takes full viewport */
+#arena-canvas {
+    position: fixed !important;
+    inset: 0;
+    z-index: var(--z-below);
+    pointer-events: none !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Ensure canvas doesn't block interactions */
+body.interactive #arena-canvas,
+button ~ #arena-canvas,
+a ~ #arena-canvas {
+    pointer-events: none !important;
+}
+
+/* Overlay gradient for content readability */
 .world-map-bg::after {
     content: '';
     position: absolute;
@@ -26,370 +40,144 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-        180deg,
-        rgba(5, 5, 8, 0.3) 0%,
-        rgba(5, 5, 8, 0.5) 50%,
-        rgba(5, 5, 8, 0.7) 100%
-    );
+    background: 
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(34, 211, 238, 0.04) 0%, transparent 40%),
+        linear-gradient(180deg, rgba(1, 1, 4, 0.4) 0%, rgba(5, 5, 8, 0.6) 50%, rgba(1, 1, 4, 0.8) 100%);
     pointer-events: none;
     z-index: 1;
 }
 
-/* Canvas pour les continents */
-.map-canvas {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    height: 100%;
-    opacity: 0.12;
-}
-
-/* SVG des continents */
-.continents-svg {
-    width: 100%;
-    height: 100%;
-}
-
-.continent-path {
-    fill: none;
-    stroke: rgba(157, 78, 221, 0.25);
-    stroke-width: 1.5;
-    vector-effect: non-scaling-stroke;
-    animation: continentGlow 8s ease-in-out infinite;
-}
-
-.continent-path.major {
-    stroke: rgba(203, 200, 23, 0.2);
-    stroke-width: 2;
-}
-
-@keyframes continentGlow {
-    0%, 100% {
-        opacity: 0.6;
-        filter: drop-shadow(0 0 3px rgba(157, 78, 221, 0.3));
-    }
-    50% {
-        opacity: 1;
-        filter: drop-shadow(0 0 8px rgba(157, 78, 221, 0.5));
-    }
-}
-
-/* Grille latitude/longitude */
-.map-grid {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+/* Industrial grid overlay */
+.globe-grid-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
     background-image: 
-        linear-gradient(rgba(123, 44, 191, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(123, 44, 191, 0.04) 1px, transparent 1px);
-    background-size: 10% 10%;
-    opacity: 0.5;
+        linear-gradient(rgba(139, 92, 246, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(139, 92, 246, 0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
 }
 
-/* Lignes de latitude majeures */
-.latitude-lines {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+/* Depth vignette */
+.depth-vignette {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
     pointer-events: none;
+    background: radial-gradient(
+        ellipse at center,
+        transparent 0%,
+        transparent 50%,
+        rgba(1, 1, 4, 0.3) 80%,
+        rgba(1, 1, 4, 0.7) 100%
+    );
 }
 
-.latitude-line {
-    position: absolute;
-    width: 100%;
-    height: 1px;
-    background: rgba(157, 78, 221, 0.15);
-    box-shadow: 0 0 3px rgba(157, 78, 221, 0.2);
-}
+/* ═══════════════════════════════════════════ */
+/* HOTSPOT DATA OVERLAY                       */
+/* ═══════════════════════════════════════════ */
 
-.latitude-line.equator {
-    background: rgba(203, 200, 23, 0.2);
-    height: 1.5px;
-    box-shadow: 0 0 5px rgba(203, 200, 23, 0.3);
-}
-
-/* Conteneur des villes */
-.cities-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+.data-overlay {
+    position: fixed;
+    top: var(--space-6);
+    right: var(--space-6);
+    z-index: var(--z-raised);
+    background: var(--glass-heavy);
+    backdrop-filter: blur(var(--blur-lg));
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-xl);
+    padding: var(--space-4) var(--space-5);
     pointer-events: none;
+    min-width: 180px;
 }
 
-/* Marqueur de ville */
-.city-marker {
-    position: absolute;
+.data-overlay-title {
+    font-family: var(--font-display);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wider);
+    color: var(--text-muted);
+    margin-bottom: var(--space-3);
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 8px;
-    animation: cityPulse 4s ease-in-out infinite;
-    transform: translate(-50%, -50%);
+    gap: var(--space-2);
 }
 
-.city-marker:nth-child(2n) {
-    animation-delay: 1s;
+.data-overlay-value {
+    font-family: var(--font-display);
+    font-size: var(--text-4xl);
+    font-weight: var(--weight-bold);
+    color: var(--primary-400);
+    line-height: 1;
 }
 
-.city-marker:nth-child(3n) {
-    animation-delay: 2s;
+.data-overlay-label {
+    font-size: var(--text-xs);
+    color: var(--text-tertiary);
+    margin-top: var(--space-1);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
 }
 
-@keyframes cityPulse {
-    0%, 100% {
-        opacity: 0.5;
-        transform: translate(-50%, -50%) scale(1);
-    }
-    50% {
-        opacity: 0.9;
-        transform: translate(-50%, -50%) scale(1.08);
-    }
+/* Live indicator */
+.live-indicator {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-2xs);
+    color: var(--error);
+    font-weight: var(--weight-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wider);
 }
 
-/* Point de la ville */
-.city-dot {
+.live-indicator::before {
+    content: '';
     width: 6px;
     height: 6px;
-    background: radial-gradient(circle, rgba(180, 180, 190, 1) 0%, rgba(160, 160, 170, 0.6) 100%);
+    background: var(--error);
     border-radius: 50%;
-    box-shadow: 
-        0 0 8px rgba(180, 180, 190, 0.7),
-        0 0 15px rgba(160, 160, 170, 0.4);
-    position: relative;
+    animation: pulse-dot 1.5s infinite;
 }
 
-/* Effet de pulsation du point */
-.city-dot::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+/* ═══════════════════════════════════════════ */
+/* SCAN LINE EFFECT                           */
+/* ═══════════════════════════════════════════ */
+
+.scan-line {
+    position: fixed;
     width: 100%;
-    height: 100%;
-    background: rgba(180, 180, 190, 0.4);
-    border-radius: 50%;
-    animation: dotPulse 2.5s ease-out infinite;
-}
-
-@keyframes dotPulse {
-    0% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 0.6;
-    }
-    100% {
-        transform: translate(-50%, -50%) scale(4);
-        opacity: 0;
-    }
-}
-
-/* Ville majeure */
-.city-marker.major .city-dot {
-    width: 10px;
-    height: 10px;
-    background: radial-gradient(circle, rgba(200, 200, 210, 1) 0%, rgba(180, 180, 190, 0.7) 100%);
-    box-shadow: 
-        0 0 12px rgba(200, 200, 210, 0.8),
-        0 0 20px rgba(180, 180, 190, 0.5);
-}
-
-.city-marker.major .city-dot::before {
-    background: rgba(200, 200, 210, 0.5);
-}
-
-/* Capitale (encore plus importante) */
-.city-marker.capital .city-dot {
-    width: 12px;
-    height: 12px;
-}
-
-/* Label de ville */
-.city-label {
-    font-size: 0.65rem;
-    color: rgba(200, 200, 210, 0.8);
-    font-weight: 600;
-    letter-spacing: 0.8px;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
-    white-space: nowrap;
-    font-family: 'Teko', sans-serif;
-    text-transform: uppercase;
-}
-
-.city-marker.major .city-label {
-    font-size: 0.8rem;
-    color: rgba(220, 220, 230, 0.9);
-    font-weight: 700;
-}
-
-.city-marker.capital .city-label {
-    font-size: 0.9rem;
-}
-
-/* Lignes de connexion entre villes */
-.connection-line {
-    position: absolute;
     height: 1px;
     background: linear-gradient(
         90deg,
         transparent 0%,
-        rgba(123, 44, 191, 0.4) 50%,
-        transparent 100%
-    );
-    transform-origin: left center;
-    animation: lineFlow 5s ease-in-out infinite;
-    pointer-events: none;
-}
-
-.connection-line.major {
-    height: 1.5px;
-    background: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(203, 200, 23, 0.3) 50%,
-        transparent 100%
-    );
-}
-
-@keyframes lineFlow {
-    0% {
-        opacity: 0;
-        transform: scaleX(0);
-    }
-    50% {
-        opacity: 1;
-        transform: scaleX(1);
-    }
-    100% {
-        opacity: 0;
-        transform: scaleX(1);
-    }
-}
-
-/* Cercles concentriques */
-.wave-circle {
-    position: absolute;
-    border: 1px solid rgba(180, 180, 190, 0.3);
-    border-radius: 50%;
-    animation: waveExpand 5s ease-out infinite;
-    pointer-events: none;
-}
-
-.city-marker.major .wave-circle {
-    border-color: rgba(200, 200, 210, 0.35);
-}
-
-@keyframes waveExpand {
-    0% {
-        width: 0;
-        height: 0;
-        opacity: 0.5;
-        transform: translate(-50%, -50%);
-    }
-    100% {
-        width: 300px;
-        height: 300px;
-        opacity: 0;
-        transform: translate(-50%, -50%);
-    }
-}
-
-/* Particules flottantes */
-.floating-particle {
-    position: absolute;
-    width: 2px;
-    height: 2px;
-    background: rgba(157, 78, 221, 0.6);
-    border-radius: 50%;
-    animation: particleFloat 25s linear infinite;
-    pointer-events: none;
-}
-
-@keyframes particleFloat {
-    0% {
-        transform: translate(0, 0) scale(1);
-        opacity: 0;
-    }
-    5% {
-        opacity: 1;
-    }
-    95% {
-        opacity: 1;
-    }
-    100% {
-        transform: translate(var(--tx), var(--ty)) scale(0);
-        opacity: 0;
-    }
-}
-
-/* Stats régionales */
-.region-stats {
-    position: absolute;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(123, 44, 191, 0.4);
-    border-radius: 10px;
-    padding: 10px 14px;
-    font-size: 0.75rem;
-    font-family: 'Teko', sans-serif;
-    pointer-events: none;
-    animation: statsFloat 4s ease-in-out infinite;
-    transform: translate(-50%, -50%);
-}
-
-.region-stats .stats-number {
-    filter: blur(3px);
-    opacity: 0.6;
-}
-
-.region-stats .stats-label {
-    filter: none;
-    opacity: 1;
-}
-
-@keyframes statsFloat {
-    0%, 100% {
-        transform: translate(-50%, -50%) translateY(0);
-    }
-    50% {
-        transform: translate(-50%, -50%) translateY(-8px);
-    }
-}
-
-/* Effet de scan */
-.scan-line {
-    position: absolute;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(123, 44, 191, 0.6) 50%,
+        var(--primary) 20%,
+        var(--primary) 80%,
         transparent 100%
     );
     top: 0;
-    animation: scanMove 12s linear infinite;
+    left: 0;
+    z-index: 2;
     pointer-events: none;
+    animation: scanMove 8s linear infinite;
+    opacity: 0.3;
 }
 
 @keyframes scanMove {
     0% {
-        top: -2px;
+        top: -1px;
         opacity: 0;
     }
-    5% {
-        opacity: 1;
+    10% {
+        opacity: 0.3;
     }
-    95% {
-        opacity: 1;
+    90% {
+        opacity: 0.3;
     }
     100% {
         top: 100%;
@@ -397,103 +185,164 @@
     }
 }
 
-/* Overlay de profondeur */
-.depth-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(
-        ellipse at center,
-        rgba(5, 5, 8, 0.2) 0%,
-        rgba(5, 5, 8, 0.5) 60%,
-        rgba(5, 5, 8, 0.85) 100%
-    );
+/* ═══════════════════════════════════════════ */
+/* COORDINATE DISPLAY                         */
+/* ═══════════════════════════════════════════ */
+
+.coordinate-display {
+    position: fixed;
+    bottom: var(--space-6);
+    left: var(--space-6);
+    z-index: var(--z-raised);
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+    color: var(--text-muted);
     pointer-events: none;
+    opacity: 0.6;
 }
 
-/* Océans avec effet de vague subtil */
-.ocean-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-        radial-gradient(ellipse at 30% 40%, rgba(27, 149, 220, 0.03) 0%, transparent 50%),
-        radial-gradient(ellipse at 70% 60%, rgba(27, 149, 220, 0.02) 0%, transparent 50%);
-    animation: oceanPulse 10s ease-in-out infinite;
-    pointer-events: none;
+.coordinate-line {
+    display: flex;
+    gap: var(--space-4);
 }
 
-@keyframes oceanPulse {
-    0%, 100% {
-        opacity: 0.5;
-    }
-    50% {
-        opacity: 1;
-    }
+.coordinate-line span {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
 }
 
-/* Responsive */
-@media (max-width: 1200px) {
-    .city-label {
-        font-size: 0.55rem;
-    }
-    
-    .city-marker.major .city-label {
-        font-size: 0.7rem;
-    }
-    
-    .city-dot {
-        width: 5px;
-        height: 5px;
-    }
-    
-    .city-marker.major .city-dot {
-        width: 8px;
-        height: 8px;
-    }
+.coordinate-label {
+    color: var(--primary-600);
+    text-transform: uppercase;
 }
+
+/* ═══════════════════════════════════════════ */
+/* LEGEND                                      */
+/* ═══════════════════════════════════════════ */
+
+.globe-legend {
+    position: fixed;
+    bottom: var(--space-6);
+    right: var(--space-6);
+    z-index: var(--z-raised);
+    background: var(--glass-heavy);
+    backdrop-filter: blur(var(--blur-lg));
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    pointer-events: auto;
+    min-width: 160px;
+}
+
+.legend-title {
+    font-family: var(--font-display);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wider);
+    color: var(--text-muted);
+    margin-bottom: var(--space-3);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+    font-size: var(--text-xs);
+    color: var(--text-secondary);
+}
+
+.legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.legend-dot.high {
+    background: var(--primary);
+    box-shadow: 0 0 8px var(--primary-glow);
+}
+
+.legend-dot.medium {
+    background: var(--accent-cyan);
+}
+
+.legend-dot.low {
+    background: var(--text-muted);
+}
+
+/* ═══════════════════════════════════════════ */
+/* MOBILE ADJUSTMENTS                          */
+/* ═══════════════════════════════════════════ */
 
 @media (max-width: 768px) {
-    .city-label {
-        font-size: 0.5rem;
+    .data-overlay {
+        top: var(--space-4);
+        right: var(--space-4);
+        padding: var(--space-3) var(--space-4);
+        min-width: 140px;
     }
     
-    .city-marker.major .city-label {
-        font-size: 0.6rem;
+    .data-overlay-value {
+        font-size: var(--text-3xl);
     }
     
-    .region-stats {
-        font-size: 0.65rem;
-        padding: 8px 12px;
-    }
-    
-    /* Masquer villes mineures sur mobile */
-    .city-marker:not(.major):not(.capital) {
-        opacity: 0.3;
-    }
-    
-    .city-marker:not(.major):not(.capital) .city-label {
+    .coordinate-display {
         display: none;
+    }
+    
+    .globe-legend {
+        bottom: calc(var(--player-height) + var(--space-4));
+        right: var(--space-4);
+    }
+    
+    .scan-line {
+        opacity: 0.15;
+    }
+    
+    .globe-grid-overlay {
+        opacity: 0.5;
     }
 }
 
-/* Mode performance réduite */
+/* ═══════════════════════════════════════════ */
+/* PERFORMANCE MODE                            */
+/* ═══════════════════════════════════════════ */
+
 @media (prefers-reduced-motion: reduce) {
-    .city-marker,
-    .connection-line,
-    .wave-circle,
-    .floating-particle,
-    .scan-line,
-    .continent-path,
-    .ocean-overlay {
-        animation: none !important;
+    .scan-line {
+        animation: none;
+        opacity: 0.1;
     }
     
-    .city-dot::before {
-        animation: none !important;
+    .live-indicator::before {
+        animation: none;
+    }
+    
+    .data-overlay-value {
+        animation: none;
+    }
+}
+
+/* ═══════════════════════════════════════════ */
+/* HIGH CONTRAST MODE                         */
+/* ═══════════════════════════════════════════ */
+
+@media (prefers-contrast: high) {
+    .world-map-bg::after {
+        background: linear-gradient(
+            180deg,
+            rgba(0, 0, 0, 0.5) 0%,
+            rgba(0, 0, 0, 0.7) 100%
+        );
+    }
+    
+    .globe-grid-overlay {
+        background-image: 
+            linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
     }
 }

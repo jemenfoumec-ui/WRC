@@ -5,3 +5,10 @@ dist/
 .env
 .env.local
 .env.*.local
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.mjs.timestamp-*
+
+# OS
+Thumbs.db

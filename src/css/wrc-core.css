@@ -175,9 +175,16 @@
     --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.3);
     
     /* Glow Shadows */
-    --glow-sm: 0 0 15px var(--primary-glow);
-    --glow-md: 0 0 30px var(--primary-glow);
-    --glow-lg: 0 0 50px var(--primary-glow);
+    --glow-sm: 0 0 20px var(--primary-glow);
+    --glow-md: 0 0 40px var(--primary-glow);
+    --glow-lg: 0 0 60px var(--primary-glow);
+    --glow-xl: 0 0 80px var(--primary-glow);
+    --glow-intense: 0 0 100px var(--primary-glow), inset 0 0 20px var(--primary-subtle);
+    
+    /* Arena-specific glows */
+    --arena-glow: 0 0 30px rgba(139, 92, 246, 0.5), 0 0 60px rgba(139, 92, 246, 0.3);
+    --arena-glow-cyan: 0 0 30px var(--accent-cyan-glow), 0 0 60px rgba(34, 211, 238, 0.3);
+    --arena-glow-gold: 0 0 20px var(--accent-gold-glow);
     
     /* ═══════════════════════════════════════════ */
     /* TRANSITIONS                                 */
