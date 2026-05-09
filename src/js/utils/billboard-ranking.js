@@ -1,7 +1,7 @@
 // ==========================================
 // BILLBOARD RANKING - TOP 100
 // ==========================================
-import { supabase } from './supabaseClient.js';
+import { supabase } from '../core/supabaseClient.js';
 
 let billboardData = [];
 let lastUpdate = null;
