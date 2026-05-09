@@ -14,6 +14,11 @@ import './js/components/nav.js';
 import { logger, appConfig } from './js/core/config.js';
 import { supabase } from './js/core/supabaseClient.js';
 
+// Premium Experience Modules
+import { scroller } from './js/core/scroller.js';
+import { Arena3D } from './js/arena/Arena3D.js';
+import { initAnimations } from './js/core/animations.js';
+
 // Register Service Worker
 registerSW({
     onNeedRefresh() {
@@ -29,6 +34,12 @@ registerSW({
 // ==========================================
 async function initApp() {
     logger.info(`WRC 2026 v${appConfig.version} starting...`);
+    
+    // Initialize 3D Arena
+    const arena = new Arena3D('arena-canvas');
+    
+    // Initialize Animations
+    initAnimations(arena);
     
     // Initialize Supabase auth state listener
     initAuthListener();
