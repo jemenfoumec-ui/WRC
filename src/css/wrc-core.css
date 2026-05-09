@@ -579,31 +579,47 @@ small {
 }
 
 .globe-label-city {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     color: var(--text-primary);
     text-shadow: 0 0 10px rgba(139, 92, 246, 0.8), 0 0 20px rgba(139, 92, 246, 0.4);
+    white-space: nowrap;
+    line-height: 1.2;
+}
+
+.globe-label-country {
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-cyan);
+    opacity: 0.8;
+    margin-top: 2px;
     white-space: nowrap;
 }
 
 .globe-label-count {
-    font-size: 9px;
+    font-size: 10px;
     font-weight: 600;
     color: var(--primary-400);
-    filter: blur(3px);
+    filter: blur(4px);
     user-select: none;
     margin-top: 2px;
     text-shadow: 0 0 8px rgba(139, 92, 246, 0.6);
+    white-space: nowrap;
 }
 
 @media (max-width: 768px) {
     .globe-label-city {
-        font-size: 8px;
+        font-size: 9px;
+    }
+    .globe-label-country {
+        font-size: 7px;
     }
     .globe-label-count {
-        font-size: 7px;
+        font-size: 8px;
         filter: blur(4px);
     }
 }

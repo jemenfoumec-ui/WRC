@@ -1,8 +1,11 @@
 import * as THREE from 'three';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 
 /**
  * WRC 2026 - 3D Globe Component
  * Maps artist distributions by country/city with glowing hotspots
+ * Features world map texture, floating city labels with Teko font
+ * Globe rotates freely - NO scroll-linked camera movement
  */
 export class Globe3D {
     constructor(canvasId) {
@@ -20,6 +23,16 @@ export class Globe3D {
             alpha: true
         });
 
+        // CSS2D Renderer for HTML labels
+        this.labelRenderer = new CSS2DRenderer();
+        this.labelRenderer.setSize(window.innerWidth, window.innerHeight);
+        this.labelRenderer.domElement.style.position = 'fixed';
+        this.labelRenderer.domElement.style.top = '0';
+        this.labelRenderer.domElement.style.left = '0';
+        this.labelRenderer.domElement.style.pointerEvents = 'none';
+        this.labelRenderer.domElement.style.zIndex = '1';
+        document.body.appendChild(this.labelRenderer.domElement);
+
         this.mouse = new THREE.Vector2();
         this.targetRotation = new THREE.Vector2();
         this.autoRotateSpeed = 0.0008;
@@ -29,14 +42,14 @@ export class Globe3D {
         this.globeRadius = 5;
         this.hotspots = [];
         this.hotspotData = [];
+        this.labelMarkers = [];
         
         // Performance settings
         this.isMobile = window.innerWidth < 768;
         this.particleCount = this.isMobile ? 1500 : 3000;
         
-        // Animation state
-        this.scrollProgress = 0;
-        this.targetScrollProgress = 0;
+        // City data for labels
+        this.cityData = this.getCityData();
         
         this.init();
     }
@@ -48,6 +61,7 @@ export class Globe3D {
         this.createGridLines();
         this.addParticles();
         this.setupLights();
+        this.addCityMarkers();
         this.setupEvents();
         this.animate();
     }
@@ -90,6 +104,9 @@ export class Globe3D {
         this.innerGlobe = new THREE.Mesh(innerGlowGeometry, innerGlowMaterial);
         this.scene.add(this.innerGlobe);
 
+        // World map texture
+        this.createWorldMapTexture();
+
         // Outer atmosphere glow
         const atmosphereGeometry = new THREE.SphereGeometry(this.globeRadius * 1.02, 32, 32);
         const atmosphereMaterial = new THREE.ShaderMaterial({
@@ -126,6 +143,130 @@ export class Globe3D {
         this.globeGroup.add(this.innerGlobe);
         this.globeGroup.add(this.atmosphere);
         this.scene.add(this.globeGroup);
+    }
+
+    createWorldMapTexture() {
+        // Create world map texture using canvas
+        const canvas = document.createElement('canvas');
+        canvas.width = 2048;
+        canvas.height = 1024;
+        const ctx = canvas.getContext('2d');
+        
+        // Dark background
+        ctx.fillStyle = '#0a0a12';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw grid lines
+        ctx.strokeStyle = 'rgba(139, 92, 246, 0.25)';
+        ctx.lineWidth = 1;
+        
+        for (let i = 0; i <= canvas.width; i += 64) {
+            ctx.beginPath();
+            ctx.moveTo(i, 0);
+            ctx.lineTo(i, canvas.height);
+            ctx.stroke();
+        }
+        for (let i = 0; i <= canvas.height; i += 64) {
+            ctx.beginPath();
+            ctx.moveTo(0, i);
+            ctx.lineTo(canvas.width, i);
+            ctx.stroke();
+        }
+        
+        // Draw continent shapes
+        ctx.fillStyle = 'rgba(139, 92, 246, 0.08)';
+        ctx.strokeStyle = 'rgba(139, 92, 246, 0.3)';
+        ctx.lineWidth = 1;
+        
+        // North America
+        ctx.beginPath();
+        ctx.moveTo(150, 180);
+        ctx.lineTo(350, 150);
+        ctx.lineTo(400, 200);
+        ctx.lineTo(380, 350);
+        ctx.lineTo(300, 450);
+        ctx.lineTo(180, 400);
+        ctx.lineTo(120, 280);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        
+        // South America
+        ctx.beginPath();
+        ctx.moveTo(350, 450);
+        ctx.lineTo(420, 480);
+        ctx.lineTo(400, 650);
+        ctx.lineTo(320, 800);
+        ctx.lineTo(280, 700);
+        ctx.lineTo(300, 500);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        
+        // Europe
+        ctx.beginPath();
+        ctx.moveTo(850, 180);
+        ctx.lineTo(1050, 150);
+        ctx.lineTo(1100, 200);
+        ctx.lineTo(1000, 280);
+        ctx.lineTo(880, 300);
+        ctx.lineTo(820, 250);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        
+        // Africa
+        ctx.beginPath();
+        ctx.moveTo(880, 320);
+        ctx.lineTo(1050, 300);
+        ctx.lineTo(1100, 400);
+        ctx.lineTo(1080, 550);
+        ctx.lineTo(1000, 650);
+        ctx.lineTo(900, 600);
+        ctx.lineTo(850, 450);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        
+        // Asia
+        ctx.beginPath();
+        ctx.moveTo(1100, 150);
+        ctx.lineTo(1500, 120);
+        ctx.lineTo(1700, 200);
+        ctx.lineTo(1650, 350);
+        ctx.lineTo(1400, 400);
+        ctx.lineTo(1200, 350);
+        ctx.lineTo(1100, 280);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        
+        // Australia
+        ctx.beginPath();
+        ctx.moveTo(1550, 550);
+        ctx.lineTo(1750, 520);
+        ctx.lineTo(1800, 620);
+        ctx.lineTo(1700, 720);
+        ctx.lineTo(1550, 680);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        
+        // Create texture
+        const texture = new THREE.CanvasTexture(canvas);
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.ClampToEdgeWrapping;
+        
+        const mapGeometry = new THREE.SphereGeometry(this.globeRadius * 0.99, 64, 64);
+        const mapMaterial = new THREE.MeshBasicMaterial({
+            map: texture,
+            transparent: true,
+            opacity: 0.6,
+            side: THREE.FrontSide
+        });
+        
+        this.worldMap = new THREE.Mesh(mapGeometry, mapMaterial);
+        this.globeGroup.add(this.worldMap);
     }
 
     createGridLines() {
@@ -251,12 +392,12 @@ export class Globe3D {
         this.targetRotation.x += (this.mouse.y * this.parallaxStrength - this.targetRotation.x) * 0.02;
         this.targetRotation.y += (this.mouse.x * this.parallaxStrength - this.targetRotation.y) * 0.02;
 
-        // Auto rotation
+        // Auto rotation (continuous, not scroll-linked)
         this.globeGroup.rotation.y += this.autoRotateSpeed;
         
-        // Apply parallax on top of auto rotation
-        this.globeGroup.rotation.x = this.targetRotation.x * 0.3;
-        this.globeGroup.rotation.z = this.targetRotation.y * 0.1;
+        // Apply subtle parallax on top of auto rotation
+        this.globeGroup.rotation.x = this.targetRotation.x * 0.2;
+        this.globeGroup.rotation.z = this.targetRotation.y * 0.05;
 
         // Pulse atmosphere
         if (this.atmosphere.material.uniforms) {
@@ -270,14 +411,11 @@ export class Globe3D {
         this.particles.rotation.y += 0.0002;
         this.particles.rotation.x += 0.0001;
 
-        // Scroll-linked camera movement
-        this.camera.position.z = 12 - this.scrollProgress * 8;
-        this.camera.position.y = this.scrollProgress * 2;
-        
-        // Slight camera rotation on scroll
-        this.camera.rotation.z = this.scrollProgress * 0.2;
+        // FIXED CAMERA - No scroll-linked movement
+        // Camera stays static to keep globe as fixed background
 
         this.renderer.render(this.scene, this.camera);
+        this.labelRenderer.render(this.scene, this.camera);
     }
 
     /**
@@ -511,6 +649,9 @@ export class Globe3D {
         return countries[country?.toUpperCase()] || { lat: null, lon: null };
     }
 
+    /**
+     * Clear hotspots
+     */
     clearHotspots() {
         this.hotspots.forEach(hotspot => {
             this.globeGroup.remove(hotspot);
@@ -522,14 +663,86 @@ export class Globe3D {
         this.hotspots = [];
     }
 
+    // City data with fake artist counts
+    getCityData() {
+        return [
+            { city: 'Paris', country: 'FR', lat: 48.8566, lon: 2.3522, artists: 2847, flag: '🇫🇷' },
+            { city: 'New York', country: 'US', lat: 40.7128, lon: -74.0060, artists: 4521, flag: '🇺🇸' },
+            { city: 'Tokyo', country: 'JP', lat: 35.6762, lon: 139.6503, artists: 3892, flag: '🇯🇵' },
+            { city: 'London', country: 'GB', lat: 51.5074, lon: -0.1278, artists: 2156, flag: '🇬🇧' },
+            { city: 'São Paulo', country: 'BR', lat: -23.5505, lon: -46.6333, artists: 1987, flag: '🇧🇷' },
+            { city: 'Berlin', country: 'DE', lat: 52.5200, lon: 13.4050, artists: 1654, flag: '🇩🇪' },
+            { city: 'Los Angeles', country: 'US', lat: 34.0522, lon: -118.2437, artists: 3241, flag: '🇺🇸' },
+            { city: 'Madrid', country: 'ES', lat: 40.4168, lon: -3.7038, artists: 1432, flag: '🇪🇸' },
+            { city: 'Seoul', country: 'KR', lat: 37.5665, lon: 126.9780, artists: 2876, flag: '🇰🇷' },
+            { city: 'Lagos', country: 'NG', lat: 6.5244, lon: 3.3792, artists: 1154, flag: '🇳🇬' },
+            { city: 'Toronto', country: 'CA', lat: 43.6532, lon: -79.3832, artists: 1876, flag: '🇨🇦' },
+            { city: 'Marseille', country: 'FR', lat: 43.2965, lon: 5.3698, artists: 987, flag: '🇫🇷' },
+            { city: 'Mexico City', country: 'MX', lat: 19.4326, lon: -99.1332, artists: 1543, flag: '🇲🇽' },
+            { city: 'Sydney', country: 'AU', lat: -33.8688, lon: 151.2093, artists: 1234, flag: '🇦🇺' },
+            { city: 'Johannesburg', country: 'ZA', lat: -26.2041, lon: 28.0473, artists: 876, flag: '🇿🇦' },
+            { city: 'Milan', country: 'IT', lat: 45.4642, lon: 9.1900, artists: 1123, flag: '🇮🇹' },
+            { city: 'Chicago', country: 'US', lat: 41.8781, lon: -87.6298, artists: 2098, flag: '🇺🇸' },
+            { city: 'Lyon', country: 'FR', lat: 45.7640, lon: 4.8357, artists: 654, flag: '🇫🇷' },
+            { city: 'Barcelona', country: 'ES', lat: 41.3851, lon: 2.1734, artists: 987, flag: '🇪🇸' },
+            { city: 'Dubai', country: 'AE', lat: 25.2048, lon: 55.2708, artists: 765, flag: '🇦🇪' }
+        ];
+    }
+
     /**
-     * Update camera based on scroll progress
+     * Add city markers with Teko font labels
      */
-    updateCameraOnScroll(progress) {
-        this.targetScrollProgress = Math.min(1, Math.max(0, progress));
+    addCityMarkers() {
+        const cities = this.cityData;
         
-        // Smooth interpolation
-        this.scrollProgress += (this.targetScrollProgress - this.scrollProgress) * 0.05;
+        cities.forEach((cityData, index) => {
+            // Create glowing hotspot
+            const position = this.latLonToVector3(cityData.lat, cityData.lon, this.globeRadius + 0.12);
+            
+            const spriteMaterial = new THREE.SpriteMaterial({
+                map: this.createHotspotTexture(),
+                color: 0x8b5cf6,
+                transparent: true,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+            
+            const sprite = new THREE.Sprite(spriteMaterial);
+            sprite.position.copy(position);
+            const size = Math.min(0.5, 0.2 + Math.log(cityData.artists + 1) * 0.06);
+            sprite.scale.set(size, size, 1);
+            
+            sprite.userData = {
+                baseScale: size,
+                phase: index * 0.5,
+                pulseSpeed: 0.5 + Math.random() * 0.5
+            };
+
+            this.globeGroup.add(sprite);
+            this.hotspots.push(sprite);
+
+            // Create HTML label with Teko font and blur effect on artist count
+            const labelDiv = document.createElement('div');
+            labelDiv.className = 'globe-label';
+            labelDiv.innerHTML = `
+                <div class="globe-label-city">${cityData.city}</div>
+                <div class="globe-label-country">${cityData.flag} ${cityData.country}</div>
+                <div class="globe-label-count" style="filter: blur(4px);">${this.formatArtistCount(cityData.artists)} ARTISTS</div>
+            `;
+            
+            const label = new CSS2DObject(labelDiv);
+            label.position.copy(position.multiplyScalar(1.15));
+            
+            this.globeGroup.add(label);
+            this.labelMarkers.push(label);
+        });
+    }
+
+    formatArtistCount(count) {
+        if (count >= 1000) {
+            return (count / 1000).toFixed(1) + 'K';
+        }
+        return count.toString();
     }
 
     /**
@@ -541,6 +754,17 @@ export class Globe3D {
 
         // Clear hotspots
         this.clearHotspots();
+
+        // Clear labels
+        this.labelMarkers.forEach(label => {
+            this.globeGroup.remove(label);
+        });
+        this.labelMarkers = [];
+
+        // Remove label renderer
+        if (this.labelRenderer && this.labelRenderer.domElement) {
+            this.labelRenderer.domElement.remove();
+        }
 
         // Dispose geometries and materials
         this.scene.traverse((object) => {

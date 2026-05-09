@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#050508">
     <meta name="description" content="WRC 2026 Tournament Arena - Live Battles">
+    
+    <!-- PWA Icons -->
+    <link rel="icon" type="image/svg+xml" href="/pwa-icon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/pwa-32x32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/pwa-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/pwa-512x512.png">
+    <link rel="apple-touch-icon" href="/pwa-192x192.png">
+    <link rel="manifest" href="/manifest.json">
+    
     <title>Arène | WRC 2026</title>
     
     <!-- Content Security Policy -->
@@ -15,8 +24,9 @@
         font-src 'self' https://fonts.gstatic.com;
         img-src 'self' data: https: blob:;
         media-src 'self' https://player.vimeo.com https://*.supabase.co blob:;
-        connect-src 'self' https://*.supabase.co https://ycgasfujxycqmbmiedaw.supabase.co;
+        connect-src 'self' https://*.supabase.co wss://*.supabase.co https://ycgasfujxycqmbmiedaw.supabase.co wss://ycgasfujxycqmbmiedaw.supabase.co;
         frame-src https://player.vimeo.com;
+        worker-src 'self' blob:;
     ">
     
     <!-- Fonts -->

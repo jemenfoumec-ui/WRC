@@ -40,22 +40,9 @@ export function initAnimations(_globe) {
         });
     }
 
-    // Note: Globe rotation is fixed, not scroll-linked
-    // Removed scroll-linked camera updates to keep globe as fixed background
+    // FIXED CAMERA - Globe rotation is NOT scroll-linked
+    // The globe rotates freely on its own without scroll effects
     
-    // // Scroll-Linked 3D Globe (DEPRECATED - now fixed)
-    // ScrollTrigger.create({
-    //     trigger: 'body',
-    //     start: 'top top',
-    //     end: 'bottom bottom',
-    //     scrub: 1,
-    //     onUpdate: (self) => {
-    //         if (globe && typeof globe.updateCameraOnScroll === 'function') {
-    //             globe.updateCameraOnScroll(self.progress);
-    //         }
-    //     }
-    // });
-
     // Stagger Reveals for sections
     const staggerSections = document.querySelectorAll('.stagger-reveal, .stagger');
     staggerSections.forEach(section => {
@@ -130,5 +117,5 @@ export function initAnimations(_globe) {
         });
     });
 
-    logger.info('Animations initialized');
+    logger.info('Animations initialized - Globe fixed background mode active');
 }

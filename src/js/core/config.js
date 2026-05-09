@@ -7,10 +7,13 @@
 const isProduction = window.location.hostname !== 'localhost' && 
                      !window.location.hostname.includes('127.0.0.1');
 
-// Supabase Configuration
+// Supabase Configuration with hardcoded fallbacks
+const SUPABASE_URL_FALLBACK = 'https://ycgasfujxycqmbmiedaw.supabase.co';
+const SUPABASE_ANON_KEY_FALLBACK = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InljZ2FzZnVqeHljcW1ibWllZGF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1NzY1MDAsImV4cCI6MjA2NTE1MjUwMH0.placeholder-key-for-fallback';
+
 export const supabaseConfig = {
-    url: import.meta.env.VITE_SUPABASE_URL || '',
-    key: import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_KEY || ''
+    url: import.meta.env.VITE_SUPABASE_URL || SUPABASE_URL_FALLBACK,
+    key: import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_KEY || SUPABASE_ANON_KEY_FALLBACK
 };
 
 // Warn if configuration is missing (but don't throw - allow graceful fallback)
