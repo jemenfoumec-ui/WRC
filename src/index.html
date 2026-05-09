@@ -224,19 +224,43 @@
 <script type="module" src="/main.js"></script>
 
 <script type="module">
-    import { openAuthModal as openAuth } from '/js/auth/auth.js';
+    import { openAuthModal } from '/js/auth/auth.js';
     
-    document.addEventListener('DOMContentLoaded', () => {
+    function setupButtons() {
         const btnJoinArtist = document.getElementById('btnJoinArtist');
         const btnJoinFan = document.getElementById('btnJoinFan');
         const btnCreateProfile = document.getElementById('btnCreateProfile');
         
-        [btnJoinArtist, btnJoinFan, btnCreateProfile].forEach(btn => {
-            if (btn) {
-                btn.addEventListener('click', () => openAuth(btn === btnJoinFan ? 'fan' : 'artist'));
-            }
-        });
-    });
+        if (btnJoinArtist) {
+            btnJoinArtist.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                openAuthModal('artist');
+            });
+        }
+        
+        if (btnJoinFan) {
+            btnJoinFan.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                openAuthModal('fan');
+            });
+        }
+        
+        if (btnCreateProfile) {
+            btnCreateProfile.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                openAuthModal('artist');
+            });
+        }
+    }
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupButtons);
+    } else {
+        setupButtons();
+    }
 </script>
 
 <!-- Global Player -->

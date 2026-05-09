@@ -6,8 +6,16 @@
 import { createClient } from '@supabase/supabase-js';
 import { supabaseConfig, cacheConfig, rateLimits, logger } from './config.js';
 
+// Validate configuration before creating client
+if (!supabaseConfig.url || !supabaseConfig.key) {
+    console.error('[WRC] Missing Supabase configuration. Please ensure .env file exists with VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY');
+}
+
 // Create singleton client
-const supabase = createClient(supabaseConfig.url, supabaseConfig.key, {
+const supabase = createClient(
+    supabaseConfig.url || 'https://placeholder.supabase.co', 
+    supabaseConfig.key || 'placeholder-key', 
+    {
     auth: {
         persistSession: true,
         autoRefreshToken: true,

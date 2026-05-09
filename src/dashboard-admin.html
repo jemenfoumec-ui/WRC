@@ -253,24 +253,28 @@
 
 <!-- Scripts - Module based -->
 <script type="module">
-    // Core modules
     import '/main.js';
     import { adminUI, adminStats } from '/js/admin/index.js';
     import { logger } from '/js/core/config.js';
 
-    // Initialize admin UI
-    adminUI.init();
-
-    // Load initial data
+    // Wait for DOM and ensure modules are loaded
     async function initAdmin() {
         logger.info('Admin panel initializing...');
         
-        await Promise.all([
-            adminStats.refresh(),
-            adminUI.loadUsersTable()
-        ]);
-        
-        logger.info('Admin panel ready');
+        try {
+            // Initialize admin UI
+            adminUI.init();
+            
+            // Load initial data
+            await Promise.all([
+                adminStats.refresh(),
+                adminUI.loadUsersTable()
+            ]);
+            
+            logger.info('Admin panel ready');
+        } catch (err) {
+            logger.error('Admin init error:', err);
+        }
     }
 
     if (document.readyState === 'loading') {
