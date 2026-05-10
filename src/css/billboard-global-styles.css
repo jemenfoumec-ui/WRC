@@ -17,18 +17,19 @@
     
     /* 🔧 CORRECTION: Fond uni sans dégradé bizarre */
     background: var(--wrc-bg-card, rgba(18, 18, 28, 0.98)) !important;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E") !important;
     backdrop-filter: blur(30px) !important;
     -webkit-backdrop-filter: blur(30px) !important;
     
     /* Bordures */
     border: 1px solid var(--wrc-border, rgba(255, 255, 255, 0.1)) !important;
     border-left: none !important;
-    border-radius: 0 var(--wrc-radius-xl, 16px) var(--wrc-radius-xl, 16px) 0 !important;
+    border-radius: 0 !important;
     
     /* Ombre subtile */
     box-shadow: 
-        4px 0 24px rgba(0, 0, 0, 0.3),
-        0 0 40px rgba(139, 92, 246, 0.15) !important;
+        10px 0 30px rgba(0, 0, 0, 0.5),
+        0 0 60px rgba(139, 92, 246, 0.2) !important;
     
     /* Z-index correct */
     z-index: 950 !important; /* En dessous du header (1000) */
@@ -67,14 +68,13 @@
     background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
     
     /* Bordures */
-    border: 2px solid rgba(139, 92, 246, 0.3) !important;
+    border: 2px solid var(--primary) !important;
     border-left: none !important;
-    border-radius: 0 14px 14px 0 !important;
+    border-radius: 0 !important;
     
     /* Ombre */
     box-shadow: 
-        3px 0 16px rgba(0, 0, 0, 0.2),
-        0 4px 20px rgba(139, 92, 246, 0.2) !important;
+        var(--arena-glow) !important;
     
     /* Z-index au-dessus du menu */
     z-index: 960 !important;
@@ -290,7 +290,7 @@
     /* 🔧 CORRECTION: Fond propre et subtil */
     background: rgba(255, 255, 255, 0.03) !important;
     border: 1px solid var(--wrc-border, rgba(255, 255, 255, 0.08)) !important;
-    border-radius: var(--wrc-radius-md, 10px) !important;
+    border-radius: 0 !important;
     
     cursor: pointer !important;
     position: relative !important;
@@ -308,7 +308,7 @@
     height: 100% !important;
     width: 3px !important;
     background: var(--wrc-purple, #8b5cf6) !important;
-    border-radius: var(--wrc-radius-md, 10px) 0 0 var(--wrc-radius-md, 10px) !important;
+    border-radius: 0 !important;
     transform: scaleY(0) !important;
     transition: transform 0.3s ease !important;
 }
