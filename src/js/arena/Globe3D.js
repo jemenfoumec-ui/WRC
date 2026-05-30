@@ -146,123 +146,81 @@ export class Globe3D {
     }
 
     createWorldMapTexture() {
-        // Create world map texture using canvas
+        // Create a more detailed dot-based world map texture
         const canvas = document.createElement('canvas');
-        canvas.width = 2048;
-        canvas.height = 1024;
+        canvas.width = 4096;
+        canvas.height = 2048;
         const ctx = canvas.getContext('2d');
         
-        // Dark background
-        ctx.fillStyle = '#0a0a12';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // Transparent background
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        // Draw grid lines
-        ctx.strokeStyle = 'rgba(139, 92, 246, 0.25)';
-        ctx.lineWidth = 1;
+        // Draw continent shapes as a reference (very light)
+        ctx.fillStyle = 'rgba(139, 92, 246, 0.05)';
         
-        for (let i = 0; i <= canvas.width; i += 64) {
+        // Better continent approximations
+        const drawCont = (pts) => {
             ctx.beginPath();
-            ctx.moveTo(i, 0);
-            ctx.lineTo(i, canvas.height);
-            ctx.stroke();
-        }
-        for (let i = 0; i <= canvas.height; i += 64) {
-            ctx.beginPath();
-            ctx.moveTo(0, i);
-            ctx.lineTo(canvas.width, i);
-            ctx.stroke();
-        }
-        
-        // Draw continent shapes
-        ctx.fillStyle = 'rgba(139, 92, 246, 0.08)';
-        ctx.strokeStyle = 'rgba(139, 92, 246, 0.3)';
-        ctx.lineWidth = 1;
-        
-        // North America
-        ctx.beginPath();
-        ctx.moveTo(150, 180);
-        ctx.lineTo(350, 150);
-        ctx.lineTo(400, 200);
-        ctx.lineTo(380, 350);
-        ctx.lineTo(300, 450);
-        ctx.lineTo(180, 400);
-        ctx.lineTo(120, 280);
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-        
-        // South America
-        ctx.beginPath();
-        ctx.moveTo(350, 450);
-        ctx.lineTo(420, 480);
-        ctx.lineTo(400, 650);
-        ctx.lineTo(320, 800);
-        ctx.lineTo(280, 700);
-        ctx.lineTo(300, 500);
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-        
-        // Europe
-        ctx.beginPath();
-        ctx.moveTo(850, 180);
-        ctx.lineTo(1050, 150);
-        ctx.lineTo(1100, 200);
-        ctx.lineTo(1000, 280);
-        ctx.lineTo(880, 300);
-        ctx.lineTo(820, 250);
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-        
+            ctx.moveTo(pts[0][0], pts[0][1]);
+            for(let i=1; i<pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+            ctx.closePath();
+            ctx.fill();
+        };
+
+        // Simplified but better world paths
+        // NA
+        drawCont([[500, 300], [1200, 250], [1400, 600], [1000, 900], [600, 800]]);
+        // SA
+        drawCont([[1000, 950], [1400, 1000], [1300, 1600], [1050, 1800], [900, 1400]]);
         // Africa
-        ctx.beginPath();
-        ctx.moveTo(880, 320);
-        ctx.lineTo(1050, 300);
-        ctx.lineTo(1100, 400);
-        ctx.lineTo(1080, 550);
-        ctx.lineTo(1000, 650);
-        ctx.lineTo(900, 600);
-        ctx.lineTo(850, 450);
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-        
+        drawCont([[1900, 700], [2400, 650], [2550, 1000], [2300, 1600], [2000, 1400], [1850, 1000]]);
+        // Europe
+        drawCont([[1900, 300], [2250, 250], [2350, 500], [2100, 650], [1850, 600]]);
         // Asia
-        ctx.beginPath();
-        ctx.moveTo(1100, 150);
-        ctx.lineTo(1500, 120);
-        ctx.lineTo(1700, 200);
-        ctx.lineTo(1650, 350);
-        ctx.lineTo(1400, 400);
-        ctx.lineTo(1200, 350);
-        ctx.lineTo(1100, 280);
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-        
+        drawCont([[2350, 250], [3500, 200], [3800, 600], [3400, 1100], [2500, 1000], [2400, 500]]);
         // Australia
-        ctx.beginPath();
-        ctx.moveTo(1550, 550);
-        ctx.lineTo(1750, 520);
-        ctx.lineTo(1800, 620);
-        ctx.lineTo(1700, 720);
-        ctx.lineTo(1550, 680);
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
+        drawCont([[3200, 1200], [3700, 1250], [3750, 1550], [3300, 1600], [3150, 1450]]);
+
+        // Convert continents to digital dots for "detailed" look
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        // Create texture
+        const dotSize = 4;
+        const gap = 8;
+        
+        ctx.fillStyle = '#8b5cf6';
+        for (let y = 0; y < canvas.height; y += gap) {
+            for (let x = 0; x < canvas.width; x += gap) {
+                const alpha = imageData.data[(y * canvas.width + x) * 4 + 3];
+                if (alpha > 0) {
+                    ctx.globalAlpha = 0.3 + (Math.random() * 0.4);
+                    ctx.beginPath();
+                    ctx.arc(x, y, dotSize * (0.5 + Math.random() * 0.5), 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+        }
+        
+        // Add some glowing "tech" lines
+        ctx.globalAlpha = 0.1;
+        ctx.strokeStyle = '#a78bfa';
+        ctx.lineWidth = 2;
+        for(let i=0; i<20; i++) {
+            const y = Math.random() * canvas.height;
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(canvas.width, y);
+            ctx.stroke();
+        }
+
         const texture = new THREE.CanvasTexture(canvas);
-        texture.wrapS = THREE.RepeatWrapping;
-        texture.wrapT = THREE.ClampToEdgeWrapping;
-        
-        const mapGeometry = new THREE.SphereGeometry(this.globeRadius * 0.99, 64, 64);
+        const mapGeometry = new THREE.SphereGeometry(this.globeRadius * 0.995, 64, 64);
         const mapMaterial = new THREE.MeshBasicMaterial({
             map: texture,
             transparent: true,
-            opacity: 0.6,
-            side: THREE.FrontSide
+            opacity: 0.8,
+            side: THREE.FrontSide,
+            blending: THREE.AdditiveBlending
         });
         
         this.worldMap = new THREE.Mesh(mapGeometry, mapMaterial);

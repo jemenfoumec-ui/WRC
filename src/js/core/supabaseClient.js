@@ -8,7 +8,7 @@ import { supabaseConfig, cacheConfig, rateLimits, logger } from './config.js';
 
 // Hardcoded fallback values as backup
 const SUPABASE_URL_FALLBACK = 'https://ycgasfujxycqmbmiedaw.supabase.co';
-const SUPABASE_ANON_KEY_FALLBACK = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InljZ2FzZnVqeHljcW1ibWllZGF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1NzY1MDAsImV4cCI6MjA2NTE1MjUwMH0.placeholder-key-for-fallback';
+const SUPABASE_ANON_KEY_FALLBACK = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InljZ2FzZnVqeHljcW1ibWllZGF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1OTI2NTAsImV4cCI6MjA4MjE2ODY1MH0.n1-XIs2wqPF8lr4nkVSBsLm_ylW_J7NrqqTwz1z4ftQ';
 
 // Use fallback values if environment variables are missing
 const supabaseUrl = supabaseConfig.url || SUPABASE_URL_FALLBACK;
